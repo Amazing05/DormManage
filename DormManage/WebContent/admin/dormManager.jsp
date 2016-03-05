@@ -35,20 +35,20 @@
 					<th>姓名</th>
 					<th>性别</th>
 					<th>电话</th>
-					<th>宿舍楼</th>
-					<th>用户名</th>
+					<th>柜台</th>
+<!-- 					<th>用户名</th> -->
 					<th>操作</th>
 				</tr>
 				<c:forEach  varStatus="i" var="dormManager" items="${dormManagerList }">
 					<tr>
 						<td>${i.count+(page-1)*pageSize }</td>
-						<td>${dormManager.name }</td>
-						<td>${dormManager.sex }</td>
-						<td>${dormManager.tel }</td>
-						<td>${dormManager.dormBuildName==null?"无":dormManager.dormBuildName }</td>
-						<td>${dormManager.userName }</td>
-						<td><button class="btn btn-mini btn-info" type="button" onclick="javascript:window.location='dormManager?action=preSave&dormManagerId=${dormManager.dormManagerId }'">修改</button>&nbsp;
-							<button class="btn btn-mini btn-danger" type="button" onclick="dormManagerDelete(${dormManager.dormManagerId})">删除</button></td>
+						<td>${dormManager.t1.name }</td>
+						<td>${dormManager.t1.gender }</td>
+						<td>${dormManager.t1.tel }</td>
+						<td>${dormManager.t2.name==null?"无":dormManager.t2.name }</td>
+<%-- 						<td>${dormManager.name }</td> --%>
+						<td><button class="btn btn-mini btn-info" type="button" onclick="javascript:window.location='dormManager?action=preSave&dormManagerId=${dormManager.t1.drugSellerId }'">修改</button>&nbsp;
+							<button class="btn btn-mini btn-danger" type="button" onclick="dormManagerDelete(${dormManager.t1.drugSellerId})">删除</button></td>
 					</tr>
 				</c:forEach>
 			</table>

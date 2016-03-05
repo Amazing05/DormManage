@@ -12,19 +12,19 @@ public class UserDao {
 
 	public Admin Login(Connection con, Admin admin)throws Exception {
 		Admin resultAdmin = null;
-		String sql = "select * from t_admin where userName=? and password=?";
+		String sql = "select * from login where userName=? and userPassword=?";
 		PreparedStatement pstmt = con.prepareStatement(sql);
 		pstmt.setString(1, admin.getUserName());
 		pstmt.setString(2, admin.getPassword());
 		ResultSet rs = pstmt.executeQuery();
 		if(rs.next()) {
 			resultAdmin = new Admin();
-			resultAdmin.setAdminId(rs.getInt("adminId"));
+//			resultAdmin.setAdminId(rs.getInt("id"));
 			resultAdmin.setUserName(rs.getString("userName"));
-			resultAdmin.setPassword(rs.getString("password"));
-			resultAdmin.setName(rs.getString("name"));
-			resultAdmin.setSex(rs.getString("sex"));
-			resultAdmin.setTel(rs.getString("tel"));
+			resultAdmin.setPassword(rs.getString("userPassword"));
+//			resultAdmin.setName(rs.getString("name"));
+//			resultAdmin.setSex(rs.getString("sex"));
+//			resultAdmin.setTel(rs.getString("tel"));
 		}
 		return resultAdmin;
 	}

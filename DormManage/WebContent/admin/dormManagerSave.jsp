@@ -36,37 +36,37 @@
 		</div>
 		<form action="dormManager?action=save" method="post" onsubmit="return checkForm()">
 			<div class="data_form" >
-				<input type="hidden" id="dormManagerId" name="dormManagerId" value="${dormManager.dormManagerId }"/>
+				<input type="hidden" id="dormManagerId" name="dormManagerId" value="${genericType.t1.drugSellerId}"/>
 					<table align="center">
 						<tr>
 							<td><font color="red">*</font>用户名：</td>
-							<td><input type="text" id="userName"  name="userName" value="${dormManager.userName }"  style="margin-top:5px;height:30px;" /></td>
+							<td><input type="text" id="userName"  name="userName" value="${genericType.t2.userName }"  style="margin-top:5px;height:30px;" /></td>
 						</tr>
 						<tr>
 							<td><font color="red">*</font>密码：</td>
-							<td><input type="password" id="password"  name="password" value="${dormManager.password }"  style="margin-top:5px;height:30px;" /></td>
+							<td><input type="password" id="password"  name="password" value="${genericType.t2.userPassword }"  style="margin-top:5px;height:30px;" /></td>
 						</tr>
 						<tr>
 							<td><font color="red">*</font>重复密码：</td>
-							<td><input type="password" id="rPassword"  name="rPassword" value="${dormManager.password }"  style="margin-top:5px;height:30px;" /></td>
+							<td><input type="password" id="rPassword"  name="rPassword" value="${genericType.t2.userPassword }"  style="margin-top:5px;height:30px;" /></td>
 						</tr>
 						<tr>
 							<td><font color="red">*</font>姓名：</td>
-							<td><input type="text" id="name"  name="name" value="${dormManager.name }"  style="margin-top:5px;height:30px;" /></td>
+							<td><input type="text" id="name"  name="name" value="${genericType.t1.name }"  style="margin-top:5px;height:30px;" /></td>
 						</tr>
 						<tr>
 							<td><font color="red">*</font>性别：</td>
 							<td>
 								<select id="sex" name="sex" style="width: 90px;">
 									<option value="">请选择...</option>
-									<option value="男" ${dormManager.sex eq "男"?'selected':'' }>男</option>
-									<option value="女" ${dormManager.sex eq "女"?'selected':'' }>女</option>
+									<option value="男" ${genericType.t1.gender eq "男"?'selected':'' }>男</option>
+									<option value="女" ${genericType.t1.gender eq "女"?'selected':'' }>女</option>
 								</select>
 							</td>
 						</tr>
 						<tr>
 							<td><font color="red">*</font>联系电话：</td>
-							<td><input type="text" id="tel"  name="tel" value="${dormManager.tel }"  style="margin-top:5px;height:30px;" /></td>
+							<td><input type="text" id="tel"  name="tel" value="${genericType.t1.tel }"  style="margin-top:5px;height:30px;" /></td>
 						</tr>
 					</table>
 					<div align="center">

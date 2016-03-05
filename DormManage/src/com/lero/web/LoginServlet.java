@@ -44,14 +44,14 @@ public class LoginServlet extends HttpServlet {
 		
 		Connection con = null;
 		try {
-//			con=dbUtil.getCon();
+			con=dbUtil.getCon();
 			Admin currentAdmin = null;
 			DormManager currentDormManager = null;
 			Student currentStudent = null;
 			if("admin".equals(userType)) {
 				Admin admin = new Admin(userName, password);
-//				currentAdmin = userDao.Login(con, admin);
-				currentAdmin = new Admin();
+				currentAdmin = userDao.Login(con, admin);
+//				currentAdmin = new Admin();
 				if(currentAdmin == null) {
 					request.setAttribute("admin", admin);
 					request.setAttribute("error", "用户名或密码错误！");
