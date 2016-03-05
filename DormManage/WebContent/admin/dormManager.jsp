@@ -22,7 +22,7 @@
 				<span class="data_search">
 					<select id="searchType" name="searchType" style="width: 80px;">
 					<option value="name">姓名</option>
-					<option value="userName" ${searchType eq "userName"?'selected':'' }>用户名</option>
+					<!--  <option value="userName" ${searchType eq "userName"?'selected':'' }>用户名</option>-->
 					</select>
 					&nbsp;<input id="s_dormManagerText" name="s_dormManagerText" type="text"  style="width:120px;height: 30px;" class="input-medium search-query" value="${s_dormManagerText }">
 					&nbsp;<button type="submit" class="btn btn-info" onkeydown="if(event.keyCode==13) myForm.submit()">搜索</button>
@@ -39,16 +39,16 @@
 <!-- 					<th>用户名</th> -->
 					<th>操作</th>
 				</tr>
-				<c:forEach  varStatus="i" var="dormManager" items="${dormManagerList }">
+				<c:forEach  varStatus="i" var="drugSellerList" items="${drugSellerList }">
 					<tr>
 						<td>${i.count+(page-1)*pageSize }</td>
-						<td>${dormManager.t1.name }</td>
-						<td>${dormManager.t1.gender }</td>
-						<td>${dormManager.t1.tel }</td>
-						<td>${dormManager.t2.name==null?"无":dormManager.t2.name }</td>
-<%-- 						<td>${dormManager.name }</td> --%>
-						<td><button class="btn btn-mini btn-info" type="button" onclick="javascript:window.location='dormManager?action=preSave&dormManagerId=${dormManager.t1.drugSellerId }'">修改</button>&nbsp;
-							<button class="btn btn-mini btn-danger" type="button" onclick="dormManagerDelete(${dormManager.t1.drugSellerId})">删除</button></td>
+						<td>${drugSellerList.t1.name }</td>
+						<td>${drugSellerList.t1.gender }</td>
+						<td>${drugSellerList.t1.tel }</td>
+						<td>${drugSellerList.t2.name==null?"无":drugSellerList.t2.name }</td>
+<%-- 						<td>${drugSellerList.name }</td> --%>
+						<td><button class="btn btn-mini btn-info" type="button" onclick="javascript:window.location='dormManager?action=preSave&dormManagerId=${drugSellerList.t1.drugSellerId }'">修改</button>&nbsp;
+							<button class="btn btn-mini btn-danger" type="button" onclick="dormManagerDelete(${drugSellerList.t1.drugSellerId})">删除</button></td>
 					</tr>
 				</c:forEach>
 			</table>

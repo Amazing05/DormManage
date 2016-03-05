@@ -10,9 +10,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.lero.dao.DormManagerDao;
+import com.lero.dao.DrugSellerDao;
 import com.lero.model.Counter;
-import com.lero.model.DormManager;
 import com.lero.model.DrugSeller;
 import com.lero.model.GenericType;
 import com.lero.model.Login;
@@ -29,7 +28,7 @@ public class DormManagerServlet extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 
 	DbUtil dbUtil = new DbUtil();
-	DormManagerDao dormManagerDao = new DormManagerDao();
+	DrugSellerDao drugSellerDao = new DrugSellerDao(); 
 	
 	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -46,7 +45,7 @@ public class DormManagerServlet extends HttpServlet{
 		String searchType = request.getParameter("searchType");
 		String page = request.getParameter("page");
 		String action = request.getParameter("action");
-		DormManager dormManager = new DormManager();
+		DrugSeller drugSeller = new DrugSeller();
 		if("preSave".equals(action)) {
 			dormManagerPreSave(request, response);
 			return;
@@ -60,9 +59,9 @@ public class DormManagerServlet extends HttpServlet{
 			if("list".equals(action)) {
 			if(StringUtil.isNotEmpty(s_dormManagerText)) {
 				if("name".equals(searchType)) {
-					dormManager.setName(s_dormManagerText);
+					drugSeller.setName(s_dormManagerText);
 				} else if("userName".equals(searchType)) {
-					dormManager.setUserName(s_dormManagerText);
+					//dormManager.setUserName(s_dormManagerText);
 				}
 			}
 			session.removeAttribute("s_dormManagerText");
@@ -72,9 +71,9 @@ public class DormManagerServlet extends HttpServlet{
 		} else if("search".equals(action)){
 			if (StringUtil.isNotEmpty(s_dormManagerText)) {
 				if ("name".equals(searchType)) {
-					dormManager.setName(s_dormManagerText);
+					drugSeller.setName(s_dormManagerText);
 				} else if ("userName".equals(searchType)) {
-					dormManager.setUserName(s_dormManagerText);
+					//dormManager.setUserName(s_dormManagerText);
 				}
 				session.setAttribute("searchType", searchType);
 				session.setAttribute("s_dormManagerText", s_dormManagerText);
@@ -85,9 +84,9 @@ public class DormManagerServlet extends HttpServlet{
 		} else {
 			if(StringUtil.isNotEmpty(s_dormManagerText)) {
 				if("name".equals(searchType)) {
-					dormManager.setName(s_dormManagerText);
+					drugSeller.setName(s_dormManagerText);
 				} else if("userName".equals(searchType)) {
-					dormManager.setUserName(s_dormManagerText);
+					//dormManager.setUserName(s_dormManagerText);
 				}
 				session.setAttribute("searchType", searchType);
 				session.setAttribute("s_dormManagerText", s_dormManagerText);
@@ -97,9 +96,9 @@ public class DormManagerServlet extends HttpServlet{
 				Object o2 = session.getAttribute("searchType");
 				if(o1!=null) {
 					if("name".equals((String)o2)) {
-						dormManager.setName((String)o1);
+						drugSeller.setName((String)o1);
 					} else if("userName".equals((String)o2)) {
-						dormManager.setUserName((String)o1);
+						//dormManager.setUserName((String)o1);
 					}
 				}
 			}
@@ -113,11 +112,11 @@ public class DormManagerServlet extends HttpServlet{
 		request.setAttribute("page", pageBean.getPage());
 		try {
 			con=dbUtil.getCon();
-			List< GenericType<DrugSeller,Counter,String>> dormManagerList = dormManagerDao.dormManagerList(con, pageBean, dormManager);
-			int total=dormManagerDao.dormManagerCount(con, dormManager);
+			List< GenericType<DrugSeller,Counter,String>> drugSellerList = drugSellerDao.dormManagerList(con, pageBean, drugSeller);
+			int total=drugSellerDao.dormManagerCount(con, drugSeller);
 			String pageCode = this.genPagation(total, Integer.parseInt(page), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
 			request.setAttribute("pageCode", pageCode);
-			request.setAttribute("dormManagerList", dormManagerList);
+			request.setAttribute("drugSellerList", drugSellerList);
 			request.setAttribute("mainPage", "admin/dormManager.jsp");
 			request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 		} catch (Exception e) {
@@ -137,7 +136,7 @@ public class DormManagerServlet extends HttpServlet{
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
-			dormManagerDao.dormManagerDelete(con, dormManagerId);
+			drugSellerDao.dormManagerDelete(con, dormManagerId);
 			request.getRequestDispatcher("dormManager?action=list").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -174,9 +173,9 @@ public class DormManagerServlet extends HttpServlet{
 			con = dbUtil.getCon();
 			int saveNum = 0;
 			if(StringUtil.isNotEmpty(drugSellerId)) { //如果drugSellerId不为空，执行更新操作
-				saveNum = dormManagerDao.dormManagerUpdate(con, drugSeller);
-				saveNum = dormManagerDao.loginUpdate(con, login, Integer.parseInt(drugSellerId));
-			} else if(dormManagerDao.haveManagerByUser(con, login.getUserName())){
+				saveNum = drugSellerDao.dormManagerUpdate(con, drugSeller);
+				saveNum = drugSellerDao.loginUpdate(con, login, Integer.parseInt(drugSellerId));
+			} else if(drugSellerDao.haveManagerByUser(con, login.getUserName())){
 				request.setAttribute("dormManager", drugSeller);
 				request.setAttribute("error", "该用户名已存在");
 				request.setAttribute("mainPage", "admin/dormManagerSave.jsp");
@@ -188,8 +187,8 @@ public class DormManagerServlet extends HttpServlet{
 				}
 				return;
 			} else {
-				saveNum = dormManagerDao.dormManagerAdd(con, drugSeller);
-				dormManagerDao.loginAdd(con, login);//登录表添加用户
+				saveNum = drugSellerDao.dormManagerAdd(con, drugSeller);
+				drugSellerDao.loginAdd(con, login);//登录表添加用户
 			}
 			if(saveNum > 0) {
 				request.getRequestDispatcher("dormManager?action=list").forward(request, response);
@@ -217,7 +216,7 @@ public class DormManagerServlet extends HttpServlet{
 			Connection con = null;
 			try {
 				con = dbUtil.getCon();
-				GenericType<DrugSeller,Login,String>  g = dormManagerDao.dormManagerShow(con, dormManagerId);
+				GenericType<DrugSeller,Login,String>  g = drugSellerDao.dormManagerShow(con, dormManagerId);
 				request.setAttribute("genericType", g);
 			} catch (Exception e) {
 				e.printStackTrace();

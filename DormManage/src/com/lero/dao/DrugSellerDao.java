@@ -14,17 +14,18 @@ import com.lero.model.Login;
 import com.lero.model.PageBean;
 import com.lero.util.StringUtil;
 
-public class DormManagerDao {
+public class DrugSellerDao { 
 
-	public List< GenericType<DrugSeller,Counter,String>> dormManagerList(Connection con, PageBean pageBean, DormManager s_dormManager)throws Exception {
+	public List< GenericType<DrugSeller,Counter,String>> dormManagerList(Connection con, PageBean pageBean, DrugSeller s_dormManager)throws Exception {
 
 		List< GenericType<DrugSeller,Counter,String>> lists = new ArrayList<GenericType<DrugSeller,Counter,String>>();   
 		StringBuffer sb = new StringBuffer("SELECT t1.*,t2.name as counterName FROM drugSeller t1 left join counter t2 on  t1.counterId=t2.counterId ");
 		if(StringUtil.isNotEmpty(s_dormManager.getName())) {
 			sb.append(" where t1.name like '%"+s_dormManager.getName()+"%'");
-		} else if(StringUtil.isNotEmpty(s_dormManager.getUserName())) {
+		} 
+		/*else if(StringUtil.isNotEmpty(s_dormManager.getUserName())) {
 			sb.append(" where t1.userName like '%"+s_dormManager.getUserName()+"%'");
-		}
+		}*/
 		sb.append("ORDER BY t1.name  ");
 		if(pageBean != null) {
 			sb.append(" limit "+pageBean.getStart()+","+pageBean.getPageSize());
@@ -64,13 +65,14 @@ public class DormManagerDao {
 	}
 	
 	
-	public int dormManagerCount(Connection con, DormManager s_dormManager)throws Exception {
-		StringBuffer sb = new StringBuffer("select count(*) as total from t_dormManager t1");
-		if(StringUtil.isNotEmpty(s_dormManager.getName())) {
-			sb.append(" where t1.name like '%"+s_dormManager.getName()+"%'");
-		} else if(StringUtil.isNotEmpty(s_dormManager.getUserName())) {
+	public int dormManagerCount(Connection con, DrugSeller drugSeller)throws Exception {
+		StringBuffer sb = new StringBuffer("select count(*) as total from drugseller t1");
+		if(StringUtil.isNotEmpty(drugSeller.getName())) {
+			sb.append(" where t1.name like '%"+drugSeller.getName()+"%'");
+		} 
+		/*else if(StringUtil.isNotEmpty(s_dormManager.getUserName())) {
 			sb.append(" where t1.userName like '%"+s_dormManager.getUserName()+"%'");
-		}
+		}*/
 		PreparedStatement pstmt = con.prepareStatement(sb.toString());
 		ResultSet rs = pstmt.executeQuery();
 		if(rs.next()) {
