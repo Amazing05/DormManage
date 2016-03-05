@@ -86,7 +86,7 @@
 			<div class="span2 bs-docs-sidebar" >
 				<ul class="nav nav-list bs-docs-sidenav">
 					<li><a href="blank"><i class="icon-chevron-right"></i>首页</a></li>
-					<li><a href="dormManager?action=list"><i class="icon-chevron-right"></i>宿舍管理员管理</a></li>
+					<li><a href="drugSeller?action=list"><i class="icon-chevron-right"></i>宿舍管理员管理</a></li>
 					<li><a href="student?action=list"><i class="icon-chevron-right"></i>学生管理</a></li>
 					<li><a href="dormBuild?action=list"><i class="icon-chevron-right"></i>宿舍楼管理</a></li>
 					<li><a href="record?action=list"><i class="icon-chevron-right"></i>缺勤记录</a></li>

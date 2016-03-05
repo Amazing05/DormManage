@@ -5,7 +5,7 @@
 <script type="text/javascript">
 	function dormManagerDelete(dormManagerId) {
 		if(confirm("您确定要删除这个宿管吗？")) {
-			window.location="dormManager?action=delete&dormManagerId="+dormManagerId;
+			window.location="drugSeller?action=delete&dormManagerId="+dormManagerId;
 		}
 	}
 	
@@ -17,8 +17,8 @@
 		<div class="data_list_title">
 			宿舍管理员管理
 		</div>
-		<form name="myForm" class="form-search" method="post" action="dormManager?action=search">
-				<button class="btn btn-success" type="button" style="margin-right: 50px;" onclick="javascript:window.location='dormManager?action=preSave'">添加</button>
+		<form name="myForm" class="form-search" method="post" action="drugSeller?action=search">
+				<button class="btn btn-success" type="button" style="margin-right: 50px;" onclick="javascript:window.location='drugSeller?action=preSave'">添加</button>
 				<span class="data_search">
 					<select id="searchType" name="searchType" style="width: 80px;">
 					<option value="name">姓名</option>
@@ -47,7 +47,7 @@
 						<td>${drugSellerList.t1.tel }</td>
 						<td>${drugSellerList.t2.name==null?"无":drugSellerList.t2.name }</td>
 <%-- 						<td>${drugSellerList.name }</td> --%>
-						<td><button class="btn btn-mini btn-info" type="button" onclick="javascript:window.location='dormManager?action=preSave&dormManagerId=${drugSellerList.t1.drugSellerId }'">修改</button>&nbsp;
+						<td><button class="btn btn-mini btn-info" type="button" onclick="javascript:window.location='drugSeller?action=preSave&dormManagerId=${drugSellerList.t1.drugSellerId }'">修改</button>&nbsp;
 							<button class="btn btn-mini btn-danger" type="button" onclick="dormManagerDelete(${drugSellerList.t1.drugSellerId})">删除</button></td>
 					</tr>
 				</c:forEach>

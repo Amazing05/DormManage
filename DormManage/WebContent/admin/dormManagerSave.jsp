@@ -34,7 +34,7 @@
 			</c:otherwise>
 		</c:choose>
 		</div>
-		<form action="dormManager?action=save" method="post" onsubmit="return checkForm()">
+		<form action="drugSeller?action=save" method="post" onsubmit="return checkForm()">
 			<div class="data_form" >
 				<input type="hidden" id="dormManagerId" name="dormManagerId" value="${genericType.t1.drugSellerId}"/>
 					<table align="center">

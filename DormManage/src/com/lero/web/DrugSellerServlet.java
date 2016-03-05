@@ -20,7 +20,7 @@ import com.lero.util.DbUtil;
 import com.lero.util.PropertiesUtil;
 import com.lero.util.StringUtil;
 
-public class DormManagerServlet extends HttpServlet{
+public class DrugSellerServlet extends HttpServlet{
 
 	/**
 	 * 
@@ -117,7 +117,7 @@ public class DormManagerServlet extends HttpServlet{
 			String pageCode = this.genPagation(total, Integer.parseInt(page), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
 			request.setAttribute("pageCode", pageCode);
 			request.setAttribute("drugSellerList", drugSellerList);
-			request.setAttribute("mainPage", "admin/dormManager.jsp");
+			request.setAttribute("mainPage", "admin/drugSeller.jsp");
 			request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -137,7 +137,7 @@ public class DormManagerServlet extends HttpServlet{
 		try {
 			con = dbUtil.getCon();
 			drugSellerDao.dormManagerDelete(con, dormManagerId);
-			request.getRequestDispatcher("dormManager?action=list").forward(request, response);
+			request.getRequestDispatcher("drugSeller?action=list").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -191,7 +191,7 @@ public class DormManagerServlet extends HttpServlet{
 				drugSellerDao.loginAdd(con, login);//登录表添加用户
 			}
 			if(saveNum > 0) {
-				request.getRequestDispatcher("dormManager?action=list").forward(request, response);
+				request.getRequestDispatcher("drugSeller?action=list").forward(request, response);
 			} else {
 				request.setAttribute("dormManager", drugSeller);
 				request.setAttribute("error", "保存失败");
@@ -235,11 +235,11 @@ public class DormManagerServlet extends HttpServlet{
 	private String genPagation(int totalNum, int currentPage, int pageSize){
 		int totalPage = totalNum%pageSize==0?totalNum/pageSize:totalNum/pageSize+1;
 		StringBuffer pageCode = new StringBuffer();
-		pageCode.append("<li><a href='dormManager?page=1'>首页</a></li>");
+		pageCode.append("<li><a href='drugSeller?page=1'>首页</a></li>");
 		if(currentPage==1) {
 			pageCode.append("<li class='disabled'><a href='#'>上一页</a></li>");
 		}else {
-			pageCode.append("<li><a href='dormManager?page="+(currentPage-1)+"'>上一页</a></li>");
+			pageCode.append("<li><a href='drugSeller?page="+(currentPage-1)+"'>上一页</a></li>");
 		}
 		for(int i=currentPage-2;i<=currentPage+2;i++) {
 			if(i<1||i>totalPage) {
@@ -248,15 +248,15 @@ public class DormManagerServlet extends HttpServlet{
 			if(i==currentPage) {
 				pageCode.append("<li class='active'><a href='#'>"+i+"</a></li>");
 			} else {
-				pageCode.append("<li><a href='dormManager?page="+i+"'>"+i+"</a></li>");
+				pageCode.append("<li><a href='drugSeller?page="+i+"'>"+i+"</a></li>");
 			}
 		}
 		if(currentPage==totalPage) {
 			pageCode.append("<li class='disabled'><a href='#'>下一页</a></li>");
 		} else {
-			pageCode.append("<li><a href='dormManager?page="+(currentPage+1)+"'>下一页</a></li>");
+			pageCode.append("<li><a href='drugSeller?page="+(currentPage+1)+"'>下一页</a></li>");
 		}
-		pageCode.append("<li><a href='dormManager?page="+totalPage+"'>尾页</a></li>");
+		pageCode.append("<li><a href='drugSeller?page="+totalPage+"'>尾页</a></li>");
 		return pageCode.toString();
 	}
 	

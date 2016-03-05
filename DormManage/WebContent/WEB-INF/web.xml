@@ -46,13 +46,13 @@
   </servlet-mapping>
   
    <servlet>
-  	<servlet-name>dormManagerServlet</servlet-name>
-  	<servlet-class>com.lero.web.DormManagerServlet</servlet-class>
+  	<servlet-name>drugSellerServlet</servlet-name>
+  	<servlet-class>com.lero.web.DrugSellerServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
-  	<servlet-name>dormManagerServlet</servlet-name>
-  	<url-pattern>/dormManager</url-pattern>
+  	<servlet-name>drugSellerServlet</servlet-name>
+  	<url-pattern>/drugSeller</url-pattern>
   </servlet-mapping>
   
    <servlet>
