@@ -18,7 +18,7 @@
 <div class="data_list">
 		<div class="data_list_title">
 		<c:choose>
-			<c:when test="${dormBuild.dormBuildId!=null }">
+			<c:when test="${dormBuild.counterId!=null }">
 				修改宿舍楼
 			</c:when>
 			<c:otherwise>
@@ -28,15 +28,15 @@
 		</div>
 		<form action="dormBuild?action=save" method="post" onsubmit="return checkForm()">
 			<div class="data_form" >
-				<input type="hidden" id="dormBuildId" name="dormBuildId" value="${dormBuild.dormBuildId }"/>
+				<input type="hidden" id="dormBuildId" name="dormBuildId" value="${dormBuild.counterId }"/>
 					<table align="center">
 						<tr>
 							<td><font color="red">*</font>名称：</td>
-							<td><input type="text" id="dormBuildName"  name="dormBuildName" value="${dormBuild.dormBuildName }"  style="margin-top:5px;height:30px;" /></td>
+							<td><input type="text" id="dormBuildName"  name="dormBuildName" value="${dormBuild.name }"  style="margin-top:5px;height:30px;" /></td>
 						</tr>
 						<tr>
 							<td>&nbsp;简介：</td>
-							<td><textarea id="detail" name="detail" rows="10">${dormBuild.detail }</textarea></td>
+							<td><textarea id="detail" name="detail" rows="10">${dormBuild.description }</textarea></td>
 						</tr>
 					</table>
 					<div align="center">

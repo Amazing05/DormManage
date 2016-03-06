@@ -6,18 +6,19 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lero.model.DormBuild;
+import com.lero.model.Counter;
 import com.lero.model.DormManager;
+import com.lero.model.DrugSeller;
 import com.lero.model.PageBean;
 import com.lero.util.StringUtil;
 
 public class DormBuildDao {
 
-	public List<DormBuild> dormBuildList(Connection con, PageBean pageBean, DormBuild s_dormBuild)throws Exception {
-		List<DormBuild> dormBuildList = new ArrayList<DormBuild>();
-		StringBuffer sb = new StringBuffer("select * from t_dormBuild t1");
-		if(StringUtil.isNotEmpty(s_dormBuild.getDormBuildName())) {
-			sb.append(" where t1.dormBuildName like '%"+s_dormBuild.getDormBuildName()+"%'");
+	public List<Counter> counterList(Connection con, PageBean pageBean, Counter counter)throws Exception {
+		List<Counter> counterList = new ArrayList<Counter>();   
+		StringBuffer sb = new StringBuffer("select * from counter t1");
+		if(StringUtil.isNotEmpty(counter.getName())) {
+			sb.append(" where t1.name like '%"+counter.getName()+"%'");
 		}
 		if(pageBean != null) {
 			sb.append(" limit "+pageBean.getStart()+","+pageBean.getPageSize());
@@ -25,13 +26,13 @@ public class DormBuildDao {
 		PreparedStatement pstmt = con.prepareStatement(sb.toString());
 		ResultSet rs = pstmt.executeQuery();
 		while(rs.next()) {
-			DormBuild dormBuild=new DormBuild();
-			dormBuild.setDormBuildId(rs.getInt("dormBuildId"));
-			dormBuild.setDormBuildName(rs.getString("dormBuildName"));
-			dormBuild.setDetail(rs.getString("dormBuildDetail"));
-			dormBuildList.add(dormBuild);
+			Counter counterTemp=new Counter();
+			counterTemp.setCounterId(rs.getInt("counterId"));
+			counterTemp.setName(rs.getString("name"));
+			counterTemp.setDescription(rs.getString("description"));
+			counterList.add(counterTemp);
 		}
-		return dormBuildList;
+		return counterList;
 	}
 	
 	public static String dormBuildName(Connection con, int dormBuildId)throws Exception {
@@ -45,10 +46,10 @@ public class DormBuildDao {
 		return null;
 	}
 	
-	public int dormBuildCount(Connection con, DormBuild s_dormBuild)throws Exception {
-		StringBuffer sb = new StringBuffer("select count(*) as total from t_dormBuild t1");
-		if(StringUtil.isNotEmpty(s_dormBuild.getDormBuildName())) {
-			sb.append(" where t1.dormBuildName like '%"+s_dormBuild.getDormBuildName()+"%'");
+	public int counterCount(Connection con, Counter counter)throws Exception {
+		StringBuffer sb = new StringBuffer("select count(*) as total from counter t1");
+		if(StringUtil.isNotEmpty(counter.getName())) {
+			sb.append(" where t1.name like '%"+counter.getName()+"%'");
 		}
 		PreparedStatement pstmt = con.prepareStatement(sb.toString());
 		ResultSet rs = pstmt.executeQuery();
@@ -59,41 +60,41 @@ public class DormBuildDao {
 		}
 	}
 	
-	public DormBuild dormBuildShow(Connection con, String dormBuildId)throws Exception {
-		String sql = "select * from t_dormBuild t1 where t1.dormBuildId=?";
+	public Counter counterShow(Connection con, String counterId)throws Exception { 
+		String sql = "select * from counter t1 where t1.counterId=?";
 		PreparedStatement pstmt=con.prepareStatement(sql);
-		pstmt.setString(1, dormBuildId);
+		pstmt.setString(1, counterId);
 		ResultSet rs=pstmt.executeQuery();
-		DormBuild dormBuild = new DormBuild();
+		Counter counter=new Counter();
 		if(rs.next()) {
-			dormBuild.setDormBuildId(rs.getInt("dormBuildId"));
-			dormBuild.setDormBuildName(rs.getString("dormBuildName"));
-			dormBuild.setDetail(rs.getString("dormBuildDetail"));
+			counter.setCounterId(rs.getInt("counterId"));
+			counter.setName(rs.getString("name"));
+			counter.setDescription(rs.getString("description"));
 		}
-		return dormBuild;
+		return counter;
 	}
 	
-	public int dormBuildAdd(Connection con, DormBuild dormBuild)throws Exception {
-		String sql = "insert into t_dormBuild values(null,?,?)";
+	public int counterAdd(Connection con, Counter counter)throws Exception {
+		String sql = "insert into counter values(null,?,?)";
 		PreparedStatement pstmt=con.prepareStatement(sql);
-		pstmt.setString(1, dormBuild.getDormBuildName());
-		pstmt.setString(2, dormBuild.getDetail());
+		pstmt.setString(1, counter.getName());
+		pstmt.setString(2, counter.getDescription());
 		return pstmt.executeUpdate();
 	}
 	
-	public int dormBuildDelete(Connection con, String dormBuildId)throws Exception {
-		String sql = "delete from t_dormBuild where dormBuildId=?";
+	public int counterDelete(Connection con, String counterId)throws Exception {
+		String sql = "delete from counter where counterId=?";
 		PreparedStatement pstmt=con.prepareStatement(sql);
-		pstmt.setString(1, dormBuildId);
+		pstmt.setString(1, counterId);
 		return pstmt.executeUpdate();
 	}
 	
-	public int dormBuildUpdate(Connection con, DormBuild dormBuild)throws Exception {
-		String sql = "update t_dormBuild set dormBuildName=?,dormBuildDetail=? where dormBuildId=?";
+	public int counterUpdate(Connection con, Counter counter)throws Exception {
+		String sql = "update counter set name=?,description=? where counterId=?";
 		PreparedStatement pstmt=con.prepareStatement(sql);
-		pstmt.setString(1, dormBuild.getDormBuildName());
-		pstmt.setString(2, dormBuild.getDetail());
-		pstmt.setInt(3, dormBuild.getDormBuildId());
+		pstmt.setString(1,counter.getName());
+		pstmt.setString(2, counter.getDescription());
+		pstmt.setInt(3, counter.getCounterId());
 		return pstmt.executeUpdate();
 	}
 	
@@ -120,45 +121,47 @@ public class DormBuildDao {
 		}
 	}
 	
-	public List<DormManager> dormManWithoutBuild(Connection con)throws Exception {
-		List<DormManager> dormManagerList = new ArrayList<DormManager>();
-		String sql = "SELECT * FROM t_dormManager WHERE dormBuildId IS NULL OR dormBuildId=0";
+	public List<DrugSeller> getDrugSellerWithoutBuild(Connection con)throws Exception {
+		List<DrugSeller> drugSellerList =new ArrayList<DrugSeller>();
+		String sql = "SELECT * FROM drugseller WHERE counterId IS NULL OR counterId=0";
 		PreparedStatement pstmt = con.prepareStatement(sql);
 		ResultSet rs = pstmt.executeQuery();
 		while(rs.next()) {
-			DormManager dormManager=new DormManager();
-			dormManager.setDormBuildId(rs.getInt("dormBuildId"));
-			dormManager.setDormManagerId(rs.getInt("dormManId"));
-			dormManager.setName(rs.getString("name"));
-			dormManager.setUserName(rs.getString("userName"));
-			dormManager.setSex(rs.getString("sex"));
-			dormManager.setTel(rs.getString("tel"));
-			dormManagerList.add(dormManager);
+			DrugSeller drugSeller = new DrugSeller();
+			drugSeller.setCounterId(rs.getInt("counterId"));
+			drugSeller.setDescription(rs.getString("description"));
+			drugSeller.setDrugSellerId(rs.getInt("drugSellerId"));
+			drugSeller.setGender(rs.getString("gender"));
+			drugSeller.setName(rs.getString("name"));
+			drugSeller.setTel(rs.getString("tel"));
+		
+			drugSellerList.add(drugSeller);
 		}
-		return dormManagerList;
+		return drugSellerList;
 	}
 	
-	public List<DormManager> dormManWithBuildId(Connection con, String dormBuildId)throws Exception {
-		List<DormManager> dormManagerList = new ArrayList<DormManager>();
-		String sql = "select *from t_dormManager where dormBuildId=?";
-		PreparedStatement pstmt=con.prepareStatement(sql);
-		pstmt.setString(1, dormBuildId);
+	public List<DrugSeller> getdrugSellerWithcounterId(Connection con, String counterId)throws Exception {
+		List<DrugSeller> drugSellerList = new ArrayList<DrugSeller>();
+		String sql = "select *from drugseller where counterId=?";
+		PreparedStatement pstmt=con.prepareStatement(sql); 
+		pstmt.setString(1, counterId);
 		ResultSet rs = pstmt.executeQuery();
 		while(rs.next()) {
-			DormManager dormManager=new DormManager();
-			dormManager.setDormBuildId(rs.getInt("dormBuildId"));
-			dormManager.setDormManagerId(rs.getInt("dormManId"));
-			dormManager.setName(rs.getString("name"));
-			dormManager.setUserName(rs.getString("userName"));
-			dormManager.setSex(rs.getString("sex"));
-			dormManager.setTel(rs.getString("tel"));
-			dormManagerList.add(dormManager);
+
+			DrugSeller drugSeller = new DrugSeller();
+			drugSeller.setCounterId(rs.getInt("counterId"));
+			drugSeller.setDescription(rs.getString("description"));
+			drugSeller.setDrugSellerId(rs.getInt("drugSellerId"));
+			drugSeller.setGender(rs.getString("gender"));
+			drugSeller.setName(rs.getString("name"));
+			drugSeller.setTel(rs.getString("tel"));
+			drugSellerList.add(drugSeller);
 		}
-		return dormManagerList;
+		return drugSellerList;
 	}
 	
 	public int managerUpdateWithId (Connection con, String dormManagerId, String dormBuildId)throws Exception {
-		String sql = "update t_dormManager set dormBuildId=? where dormManId=?";
+		String sql = "update drugseller set counterId=? where drugsellerId=?";
 		PreparedStatement pstmt=con.prepareStatement(sql);
 		pstmt.setString(1, dormBuildId);
 		pstmt.setString(2, dormManagerId);

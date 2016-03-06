@@ -65,7 +65,7 @@ public class DrugSellerDao {
 	}
 	
 	
-	public int dormManagerCount(Connection con, DrugSeller drugSeller)throws Exception {
+	public int drugSellerCount(Connection con, DrugSeller drugSeller)throws Exception {
 		StringBuffer sb = new StringBuffer("select count(*) as total from drugseller t1");
 		if(StringUtil.isNotEmpty(drugSeller.getName())) {
 			sb.append(" where t1.name like '%"+drugSeller.getName()+"%'");

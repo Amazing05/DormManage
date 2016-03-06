@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.lero.dao.DormBuildDao;
+import com.lero.model.Counter;
 import com.lero.model.DormBuild;
 import com.lero.model.DormManager;
+import com.lero.model.DrugSeller;
 import com.lero.model.PageBean;
 import com.lero.util.DbUtil;
 import com.lero.util.PropertiesUtil;
@@ -42,45 +44,50 @@ public class DormBuildServlet extends HttpServlet{
 		String s_dormBuildName = request.getParameter("s_dormBuildName");
 		String page = request.getParameter("page");
 		String action = request.getParameter("action");
-		DormBuild dormBuild = new DormBuild();
+		//DormBuild dormBuild = new DormBuild();
+		Counter counter=new Counter();
 		if("preSave".equals(action)) {
-			dormBuildPreSave(request, response);
+			counterPreSave(request, response);
 			return;
 		} else if("save".equals(action)){
-			dormBuildSave(request, response);
+			counterSave(request, response);
 			return;
 		} else if("delete".equals(action)){
-			dormBuildDelete(request, response);
+			counterDelete(request, response);
 			return;
 		} else if("manager".equals(action)){
-			dormBuildManager(request, response);
+			counterManager(request, response);
 			return;
 		} else if("addManager".equals(action)){
-			dormBuildAddManager(request, response);
+			counterAddDrugSeller(request, response);
 		} else if("move".equals(action)){
 			managerMove(request, response);
 		} else if("list".equals(action)) {
 			if(StringUtil.isNotEmpty(s_dormBuildName)) {
-				dormBuild.setDormBuildName(s_dormBuildName);
+				//dormBuild.setDormBuildName(s_dormBuildName);
+				counter.setName(s_dormBuildName);
 			}
 			session.removeAttribute("s_dormBuildName");
 			request.setAttribute("s_dormBuildName", s_dormBuildName);
 		} else if("search".equals(action)){
 			if(StringUtil.isNotEmpty(s_dormBuildName)) {
-				dormBuild.setDormBuildName(s_dormBuildName);
+				//dormBuild.setDormBuildName(s_dormBuildName);
+				counter.setName(s_dormBuildName);
 				session.setAttribute("s_dormBuildName", s_dormBuildName);
 			}else {
 				session.removeAttribute("s_dormBuildName");
 			}
 		} else {
 			if(StringUtil.isNotEmpty(s_dormBuildName)) {
-				dormBuild.setDormBuildName(s_dormBuildName);
+				//dormBuild.setDormBuildName(s_dormBuildName);
+				counter.setName(s_dormBuildName);
 				session.setAttribute("s_dormBuildName", s_dormBuildName);
 			}
 			if(StringUtil.isEmpty(s_dormBuildName)) {
 				Object o = session.getAttribute("s_dormBuildName");
 				if(o!=null) {
-					dormBuild.setDormBuildName((String)o);
+					//dormBuild.setDormBuildName((String)o);
+					counter.setName(s_dormBuildName);
 				}
 			}
 		}
@@ -92,12 +99,12 @@ public class DormBuildServlet extends HttpServlet{
 		request.setAttribute("pageSize", pageBean.getPageSize());
 		request.setAttribute("page", pageBean.getPage());
 		try {
-			con=dbUtil.getCon();
-			List<DormBuild> dormBuildList = dormBuildDao.dormBuildList(con, pageBean, dormBuild);
-			int total=dormBuildDao.dormBuildCount(con, dormBuild);
+			con=dbUtil.getCon(); 
+			List<Counter> counterList = dormBuildDao.counterList(con, pageBean, counter);
+			int total=dormBuildDao.counterCount(con, counter);
 			String pageCode = this.genPagation(total, Integer.parseInt(page), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
 			request.setAttribute("pageCode", pageCode);
-			request.setAttribute("dormBuildList", dormBuildList);
+			request.setAttribute("counterList", counterList);
 			request.setAttribute("mainPage", "admin/dormBuild.jsp");
 			request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 		} catch (Exception e) {
@@ -125,7 +132,7 @@ public class DormBuildServlet extends HttpServlet{
 		}
 	}
 
-	private void dormBuildAddManager(HttpServletRequest request,
+	private void counterAddDrugSeller(HttpServletRequest request,
 			HttpServletResponse response) {
 		String dormBuildId = request.getParameter("dormBuildId");
 		String dormManagerId = request.getParameter("dormManagerId");
@@ -139,35 +146,35 @@ public class DormBuildServlet extends HttpServlet{
 		}
 	}
 
-	private void dormBuildManager(HttpServletRequest request,
+	private void counterManager(HttpServletRequest request, 
 			HttpServletResponse response) {
-		String dormBuildId = request.getParameter("dormBuildId");
+		String counterId = request.getParameter("dormBuildId");
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
-			List<DormManager> managerListWithId = dormBuildDao.dormManWithBuildId(con, dormBuildId);
-			List<DormManager> managerListToSelect = dormBuildDao.dormManWithoutBuild(con);
-			request.setAttribute("dormBuildId", dormBuildId);
-			request.setAttribute("managerListWithId", managerListWithId);
-			request.setAttribute("managerListToSelect", managerListToSelect);
-			request.setAttribute("mainPage", "admin/selectManager.jsp");
+			List<DrugSeller> drugSellerListWithId = dormBuildDao.getdrugSellerWithcounterId(con, counterId);//获取该柜台所有售药员
+			List<DrugSeller> drugSellerrListToSelect = dormBuildDao.getDrugSellerWithoutBuild(con);//获取所有售药员
+			request.setAttribute("dormBuildId", counterId);
+			request.setAttribute("managerListWithId", drugSellerListWithId);
+			request.setAttribute("managerListToSelect", drugSellerrListToSelect);
+			request.setAttribute("mainPage", "admin/selectManager.jsp"); 
 			request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void dormBuildDelete(HttpServletRequest request,
+	private void counterDelete(HttpServletRequest request, 
 			HttpServletResponse response) {
 		String dormBuildId = request.getParameter("dormBuildId");
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
-			if(dormBuildDao.existManOrDormWithId(con, dormBuildId)) {
+			/*if(dormBuildDao.existManOrDormWithId(con, dormBuildId)) {
 				request.setAttribute("error", "宿舍楼下有宿舍或宿管，不能删除该宿舍楼");
-			} else {
-				dormBuildDao.dormBuildDelete(con, dormBuildId);
-			}
+			} else {*/
+				dormBuildDao.counterDelete(con, dormBuildId);
+			//}
 			request.getRequestDispatcher("dormBuild?action=list").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,28 +187,32 @@ public class DormBuildServlet extends HttpServlet{
 		}
 	}
 
-	private void dormBuildSave(HttpServletRequest request,
+	private void counterSave(HttpServletRequest request,
 			HttpServletResponse response)throws ServletException, IOException {
-		String dormBuildId = request.getParameter("dormBuildId");
-		String dormBuildName = request.getParameter("dormBuildName");
-		String detail = request.getParameter("detail");
-		DormBuild dormBuild = new DormBuild(dormBuildName, detail);
-		if(StringUtil.isNotEmpty(dormBuildId)) {
-			dormBuild.setDormBuildId(Integer.parseInt(dormBuildId));
+		String counterId = request.getParameter("dormBuildId"); 
+		String name = request.getParameter("dormBuildName");
+		String description = request.getParameter("detail");
+		//DormBuild dormBuild = new DormBuild(name, description); 
+		Counter counter=new Counter();
+		counter.setDescription(description);
+		counter.setName(name);
+		if(StringUtil.isNotEmpty(counterId)) {
+			//dormBuild.setDormBuildId(Integer.parseInt(counterId));
+			counter.setCounterId(Integer.parseInt(counterId));
 		}
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
 			int saveNum = 0;
-			if(StringUtil.isNotEmpty(dormBuildId)) {
-				saveNum = dormBuildDao.dormBuildUpdate(con, dormBuild);
+			if(StringUtil.isNotEmpty(counterId)) {
+				saveNum = dormBuildDao.counterUpdate(con, counter);
 			} else {
-				saveNum = dormBuildDao.dormBuildAdd(con, dormBuild);
+				saveNum = dormBuildDao.counterAdd(con, counter);
 			}
 			if(saveNum > 0) {
 				request.getRequestDispatcher("dormBuild?action=list").forward(request, response);
 			} else {
-				request.setAttribute("dormBuild", dormBuild);
+				request.setAttribute("dormBuild", counter);
 				request.setAttribute("error", "保存失败");
 				request.setAttribute("mainPage", "dormBuild/dormBuildSave.jsp");
 				request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
@@ -217,15 +228,15 @@ public class DormBuildServlet extends HttpServlet{
 		}
 	}
 
-	private void dormBuildPreSave(HttpServletRequest request,
+	private void counterPreSave(HttpServletRequest request, 
 			HttpServletResponse response)throws ServletException, IOException {
-		String dormBuildId = request.getParameter("dormBuildId");
-		if(StringUtil.isNotEmpty(dormBuildId)) {
+		String counterId = request.getParameter("dormBuildId");
+		if(StringUtil.isNotEmpty(counterId)) {
 			Connection con = null;
 			try {
 				con = dbUtil.getCon();
-				DormBuild dormBuild = dormBuildDao.dormBuildShow(con, dormBuildId);
-				request.setAttribute("dormBuild", dormBuild);
+				Counter counter = dormBuildDao.counterShow(con, counterId);
+				request.setAttribute("dormBuild", counter); 
 			} catch (Exception e) {
 				e.printStackTrace();
 			} finally {

@@ -113,7 +113,7 @@ public class DrugSellerServlet extends HttpServlet{
 		try {
 			con=dbUtil.getCon();
 			List< GenericType<DrugSeller,Counter,String>> drugSellerList = drugSellerDao.dormManagerList(con, pageBean, drugSeller);
-			int total=drugSellerDao.dormManagerCount(con, drugSeller);
+			int total=drugSellerDao.drugSellerCount(con, drugSeller);
 			String pageCode = this.genPagation(total, Integer.parseInt(page), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
 			request.setAttribute("pageCode", pageCode);
 			request.setAttribute("drugSellerList", drugSellerList);
