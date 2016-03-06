@@ -71,27 +71,28 @@ window.onload = function(){
 				<thead>
 					<tr>
 					<!-- <th>编号</th> -->
-					<th>学号</th>
-					<th>姓名</th>
-					<th>性别</th>
-					<th>宿舍楼</th>
-					<th>寝室</th>
-					<th>电话</th>
+					<th>名称</th>
+					<th>售价</th>
+					<th>进价</th>
+					<th>柜台名称</th>
+					<th>有效期</th>
+					<th>说明</th>
 					<th>操作</th>
 				</tr>
 				</thead>
 				<tbody>
-				<c:forEach  varStatus="i" var="student" items="${studentList }">
+				<c:forEach  varStatus="i" var="item" items="${list }">
 					<tr>
 						<%-- <td>${i.count+(page-1)*pageSize }</td> --%>
-						<td>${student.userName }</td>
-						<td>${student.name }</td>
-						<td>${student.sex }</td>
-						<td>${student.dormBuildName==null?"无":student.dormBuildName }</td>
-						<td>${student.dormName }</td>
-						<td>${student.tel }</td>
-						<td><button class="btn btn-mini btn-info" type="button" onclick="javascript:window.location='student?action=preSave&studentId=${student.studentId }'">修改</button>&nbsp;
-							<button class="btn btn-mini btn-danger" type="button" onclick="studentDelete(${student.studentId })">删除</button></td>
+						<td>${item.t1.name }</td>
+						<td>${item.t1.buyingPrice }</td>
+						<td>${item.t1.sellingPrice }</td>
+						<td>${item.t2.name==null?"无":item.t2.name }</td>
+						<td>${item.t1.deadline }</td>
+						<td>${item.t1.description}</td>
+<%-- 						<td>${student.tel }</td> --%>
+						<td><button class="btn btn-mini btn-info" type="button" onclick="javascript:window.location='student?action=preSave&studentId=${item.t1.drugId }'">修改</button>&nbsp;
+							<button class="btn btn-mini btn-danger" type="button" onclick="studentDelete(${item.t1.drugId })">删除</button></td>
 					</tr>
 				</c:forEach>
 				</tbody>
