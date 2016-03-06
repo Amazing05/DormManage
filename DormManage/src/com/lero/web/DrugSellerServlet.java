@@ -41,58 +41,58 @@ public class DrugSellerServlet extends HttpServlet{
 			throws ServletException, IOException {
 		request.setCharacterEncoding("utf-8");
 		HttpSession session = request.getSession();
-		String s_dormManagerText = request.getParameter("s_dormManagerText");
+		String s_drugSellerText = request.getParameter("s_drugSellerText");
 		String searchType = request.getParameter("searchType");
 		String page = request.getParameter("page");
 		String action = request.getParameter("action");
 		DrugSeller drugSeller = new DrugSeller();
 		if("preSave".equals(action)) {
-			dormManagerPreSave(request, response);
+			drugSellerPreSave(request, response); 
 			return;
 		} else if("save".equals(action)){
-			dormManagerSave(request, response);
+			drugSellerSave(request, response);
 			return;
 		} else if("delete".equals(action)){
-			dormManagerDelete(request, response);
+			drugSellerDelete(request, response);
 			return;
 		} else 
 			if("list".equals(action)) {
-			if(StringUtil.isNotEmpty(s_dormManagerText)) {
+			if(StringUtil.isNotEmpty(s_drugSellerText)) {
 				if("name".equals(searchType)) {
-					drugSeller.setName(s_dormManagerText);
+					drugSeller.setName(s_drugSellerText);
 				} else if("userName".equals(searchType)) {
-					//dormManager.setUserName(s_dormManagerText);
+					//dormManager.setUserName(s_drugSellerText);
 				}
 			}
-			session.removeAttribute("s_dormManagerText");
+			session.removeAttribute("s_drugSellerText");
 			session.removeAttribute("searchType");
-			request.setAttribute("s_dormManagerText", s_dormManagerText);
+			request.setAttribute("s_drugSellerText", s_drugSellerText);
 			request.setAttribute("searchType", searchType);
 		} else if("search".equals(action)){
-			if (StringUtil.isNotEmpty(s_dormManagerText)) {
+			if (StringUtil.isNotEmpty(s_drugSellerText)) {
 				if ("name".equals(searchType)) {
-					drugSeller.setName(s_dormManagerText);
+					drugSeller.setName(s_drugSellerText);
 				} else if ("userName".equals(searchType)) {
-					//dormManager.setUserName(s_dormManagerText);
+					//dormManager.setUserName(s_drugSellerText);
 				}
 				session.setAttribute("searchType", searchType);
-				session.setAttribute("s_dormManagerText", s_dormManagerText);
+				session.setAttribute("s_drugSellerText", s_drugSellerText);
 			} else {
-				session.removeAttribute("s_dormManagerText");
+				session.removeAttribute("s_drugSellerText");
 				session.removeAttribute("searchType");
 			}
 		} else {
-			if(StringUtil.isNotEmpty(s_dormManagerText)) {
+			if(StringUtil.isNotEmpty(s_drugSellerText)) {
 				if("name".equals(searchType)) {
-					drugSeller.setName(s_dormManagerText);
+					drugSeller.setName(s_drugSellerText);
 				} else if("userName".equals(searchType)) {
-					//dormManager.setUserName(s_dormManagerText);
+					//dormManager.setUserName(s_drugSellerText);
 				}
 				session.setAttribute("searchType", searchType);
-				session.setAttribute("s_dormManagerText", s_dormManagerText);
+				session.setAttribute("s_drugSellerText", s_drugSellerText);
 			}
-			if(StringUtil.isEmpty(s_dormManagerText)) {
-				Object o1 = session.getAttribute("s_dormManagerText");
+			if(StringUtil.isEmpty(s_drugSellerText)) {
+				Object o1 = session.getAttribute("s_drugSellerText");
 				Object o2 = session.getAttribute("searchType");
 				if(o1!=null) {
 					if("name".equals((String)o2)) {
@@ -130,13 +130,13 @@ public class DrugSellerServlet extends HttpServlet{
 		}
 	}
 
-	private void dormManagerDelete(HttpServletRequest request,
+	private void drugSellerDelete(HttpServletRequest request,
 			HttpServletResponse response) {
-		String dormManagerId = request.getParameter("dormManagerId");
+		String drugSellerId = request.getParameter("drugSellerId");
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
-			drugSellerDao.dormManagerDelete(con, dormManagerId);
+			drugSellerDao.drugSellerDelete(con, drugSellerId);
 			request.getRequestDispatcher("drugSeller?action=list").forward(request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -149,13 +149,13 @@ public class DrugSellerServlet extends HttpServlet{
 		}
 	}
 
-	private void dormManagerSave(HttpServletRequest request,
+	private void drugSellerSave(HttpServletRequest request, 
 			HttpServletResponse response)throws ServletException, IOException {
-		String drugSellerId = request.getParameter("dormManagerId");
+		String drugSellerId = request.getParameter("drugSellerId");
 		String userName = request.getParameter("userName");
 		String userPassword = request.getParameter("password");
 		String name = request.getParameter("name");
-		String gender = request.getParameter("sex");
+		String gender = request.getParameter("gender");
 		String tel = request.getParameter("tel");
 //		DormManager dormManager = new DormManager(userName, password, name, sex, tel);
 		DrugSeller drugSeller=new DrugSeller();
@@ -172,13 +172,16 @@ public class DrugSellerServlet extends HttpServlet{
 		try {
 			con = dbUtil.getCon();
 			int saveNum = 0;
-			if(StringUtil.isNotEmpty(drugSellerId)) { //如果drugSellerId不为空，执行更新操作
-				saveNum = drugSellerDao.dormManagerUpdate(con, drugSeller);
+			if(StringUtil.isNotEmpty(drugSellerId) && !(drugSellerId.equals("0"))) { //如果drugSellerId不为空，执行更新操作
+				saveNum = drugSellerDao.drugSellerUpdate(con, drugSeller);
 				saveNum = drugSellerDao.loginUpdate(con, login, Integer.parseInt(drugSellerId));
 			} else if(drugSellerDao.haveManagerByUser(con, login.getUserName())){
-				request.setAttribute("dormManager", drugSeller);
+				 GenericType<DrugSeller,Login,String>  g = new GenericType<DrugSeller,Login,String> (drugSeller,login,"");
+				//request.setAttribute("dormManager", drugSeller);
+				 g.getT1().setDrugSellerId(0);//重复时设置为0
+				 request.setAttribute("genericType", g);
 				request.setAttribute("error", "该用户名已存在");
-				request.setAttribute("mainPage", "admin/dormManagerSave.jsp");
+				request.setAttribute("mainPage", "admin/drugSellerSave.jsp");
 				request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 				try {
 					dbUtil.closeCon(con);
@@ -187,7 +190,7 @@ public class DrugSellerServlet extends HttpServlet{
 				}
 				return;
 			} else {
-				saveNum = drugSellerDao.dormManagerAdd(con, drugSeller);
+				saveNum = drugSellerDao.drugSellerAdd(con, drugSeller);
 				drugSellerDao.loginAdd(con, login);//登录表添加用户
 			}
 			if(saveNum > 0) {
@@ -195,7 +198,7 @@ public class DrugSellerServlet extends HttpServlet{
 			} else {
 				request.setAttribute("dormManager", drugSeller);
 				request.setAttribute("error", "保存失败");
-				request.setAttribute("mainPage", "dormManager/dormManagerSave.jsp");
+				request.setAttribute("mainPage", "dormManager/drugSellerSave.jsp");
 				request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 			}
 		} catch (Exception e) {
@@ -209,14 +212,14 @@ public class DrugSellerServlet extends HttpServlet{
 		}
 	}
 
-	private void dormManagerPreSave(HttpServletRequest request,
+	private void drugSellerPreSave(HttpServletRequest request,
 			HttpServletResponse response)throws ServletException, IOException {
-		String dormManagerId = request.getParameter("dormManagerId");
-		if(StringUtil.isNotEmpty(dormManagerId)) {
+		String drugSeller = request.getParameter("drugSellerId");
+		if(StringUtil.isNotEmpty(drugSeller)) {
 			Connection con = null;
-			try {
+			try { 
 				con = dbUtil.getCon();
-				GenericType<DrugSeller,Login,String>  g = drugSellerDao.dormManagerShow(con, dormManagerId);
+				GenericType<DrugSeller,Login,String>  g = drugSellerDao.drugSellerShow(con, drugSeller);
 				request.setAttribute("genericType", g);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -228,7 +231,7 @@ public class DrugSellerServlet extends HttpServlet{
 				}
 			}
 		} 
-		request.setAttribute("mainPage", "admin/dormManagerSave.jsp");
+		request.setAttribute("mainPage", "admin/drugSellerSave.jsp");
 		request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 	}
 

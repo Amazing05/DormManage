@@ -26,7 +26,7 @@
 <div class="data_list">
 		<div class="data_list_title">
 		<c:choose>
-			<c:when test="${dormManager.dormManagerId!=null }">
+			<c:when test="${genericType.t1.drugSellerId!=null }">
 				修改管理员
 			</c:when>
 			<c:otherwise>
@@ -36,7 +36,7 @@
 		</div>
 		<form action="drugSeller?action=save" method="post" onsubmit="return checkForm()">
 			<div class="data_form" >
-				<input type="hidden" id="dormManagerId" name="dormManagerId" value="${genericType.t1.drugSellerId}"/>
+				<input type="hidden" id="drugSellerId" name="drugSellerId" value="${genericType.t1.drugSellerId}"/>
 					<table align="center">
 						<tr>
 							<td><font color="red">*</font>用户名：</td>
@@ -57,7 +57,7 @@
 						<tr>
 							<td><font color="red">*</font>性别：</td>
 							<td>
-								<select id="sex" name="sex" style="width: 90px;">
+								<select id="gender" name="gender" style="width: 90px;">
 									<option value="">请选择...</option>
 									<option value="男" ${genericType.t1.gender eq "男"?'selected':'' }>男</option>
 									<option value="女" ${genericType.t1.gender eq "女"?'selected':'' }>女</option>

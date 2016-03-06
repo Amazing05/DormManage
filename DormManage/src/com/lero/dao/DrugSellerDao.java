@@ -82,12 +82,12 @@ public class DrugSellerDao {
 		}
 	}
 	
-	public GenericType<DrugSeller,Login,String> dormManagerShow(Connection con, String drugSellerId)throws Exception {
+	public GenericType<DrugSeller,Login,String> drugSellerShow(Connection con, String drugSellerId)throws Exception {
 		String sql = "select * from drugseller t1 where t1.drugsellerId=?";
 		PreparedStatement pstmt=con.prepareStatement(sql);
 		pstmt.setString(1, drugSellerId);
 		ResultSet rs=pstmt.executeQuery();
-		DrugSeller drugSeller = new DrugSeller();
+		DrugSeller drugSeller = new DrugSeller(); 
 		
 		if(rs.next()) {
 			drugSeller.setDrugSellerId(rs.getInt("drugsellerId"));
@@ -112,7 +112,7 @@ public class DrugSellerDao {
 		return g;
 	}
 	
-	public int dormManagerAdd(Connection con, DrugSeller drugSeller)throws Exception {
+	public int drugSellerAdd(Connection con, DrugSeller drugSeller)throws Exception {
 //		String sql = "insert into t_dormManager values(null,?,?,null,?,?,?)";
 		String sql = "insert into drugseller values(null,?,?,?,null,null)";
 		PreparedStatement pstmt=con.prepareStatement(sql);
@@ -138,7 +138,7 @@ public class DrugSellerDao {
 		return pstmt.executeUpdate();
 	}
 	
-	public int dormManagerDelete(Connection con, String drugSellerId)throws Exception {
+	public int drugSellerDelete(Connection con, String drugSellerId)throws Exception {
 		String sql = "delete from drugseller where drugsellerId=?";
 		PreparedStatement pstmt=con.prepareStatement(sql);
 		pstmt.setString(1, drugSellerId);
@@ -146,11 +146,11 @@ public class DrugSellerDao {
 		 sql = "delete from login where userId=? and role = ?";
 		 pstmt=con.prepareStatement(sql);
 		 pstmt.setString(1, drugSellerId); 
-		 pstmt.setString(2, "drugseller");
+		 pstmt.setString(2, "drugseller"); 
 		return  pstmt.executeUpdate();
 	}
 	
-	public int dormManagerUpdate(Connection con, DrugSeller drugSeller)throws Exception {
+	public int drugSellerUpdate(Connection con, DrugSeller drugSeller)throws Exception { 
 		String sql = "update drugseller set name=?,gender=?,tel=? where drugsellerId=?";
 		PreparedStatement pstmt=con.prepareStatement(sql);
 		pstmt.setString(1, drugSeller.getName());
