@@ -12,8 +12,16 @@ public class Drug {
 	private double buyingPrice;
 	private double sellingPrice;
 	private int counterId;
-	private Date deadline;
+	private String deadline;
 	private String description;
+	private int quantity;
+	
+	public int getQuantity() {
+		return quantity;
+	}
+	public void setQuantity(int quantity) {
+		this.quantity = quantity;
+	}
 	public int getDrugId() {
 		return drugId;
 	}
@@ -44,10 +52,10 @@ public class Drug {
 	public void setCounterId(int counterId) {
 		this.counterId = counterId;
 	}
-	public Date getDeadline() {
+	public String getDeadline() {
 		return deadline;
 	}
-	public void setDeadline(Date deadline) {
+	public void setDeadline(String deadline) {
 		this.deadline = deadline;
 	}
 	public String getDescription() {

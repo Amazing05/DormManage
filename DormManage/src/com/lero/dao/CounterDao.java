@@ -24,7 +24,7 @@ public class CounterDao {
 	 * @param con
 	 * @return List<Counter>,DB中没有数据时，返回一个size为0的List<Counter>
 	 */
-	private List<Counter> listCounter(Connection con) {
+	public List<Counter> listCounter(Connection con) {
 
 		List<Counter> list = new ArrayList<Counter>();
 		StringBuffer str = new StringBuffer("select * from counter c");

@@ -2,7 +2,9 @@ package com.lero.web;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -10,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.lero.dao.CounterDao;
 import com.lero.dao.DormBuildDao;
 import com.lero.dao.DrugDao;
 import com.lero.dao.StudentDao;
@@ -31,6 +34,7 @@ public class StudentServlet extends HttpServlet {
 	DbUtil dbUtil = new DbUtil();
 	StudentDao studentDao = new StudentDao();
 	DrugDao drugDao = new DrugDao();
+	CounterDao counterDao = new CounterDao();
 
 	@Override
 	protected void doGet(HttpServletRequest request,
@@ -168,8 +172,10 @@ public class StudentServlet extends HttpServlet {
 				if ("admin".equals((String) currentUserType)) {
 					// List<Student> studentList = studentDao.studentList(con,
 					// student);
+					Map<String,String> condition = new HashMap<String,String>();
+					condition.put("null", "null");
 					List<GenericType<Drug, Counter, String>> list = drugDao
-							.listDrugs(con, drug);
+							.listDrugs(con,condition);
 					request.setAttribute("dormBuildList",
 							studentDao.dormBuildList(con));
 					request.setAttribute("list", list);
@@ -199,14 +205,16 @@ public class StudentServlet extends HttpServlet {
 				}
 			}
 		} else if("search".equals(action)){
-			Drug condition = new Drug();
+			Map<String,String> condition = new HashMap<String,String>();
 			
 			if(StringUtil.isNotEmpty(s_studentText)) {
 				// 判断查询类型
 				if("name".equals(searchType)) { 
-					drug.setName(s_studentText);
+					condition.put("name", s_studentText);
+				} else if("counter".equals(searchType)) {
+					condition.put("counter", s_studentText);
 				}
-				drugSearch(request,response,drug);
+				drugSearch(request,response,condition);
 				return;
 			} else {
 				//如果查询内容为空，默认是list方法
@@ -218,11 +226,12 @@ public class StudentServlet extends HttpServlet {
 
 	private void studentDelete(HttpServletRequest request,
 			HttpServletResponse response) {
-		String studentId = request.getParameter("studentId");
+		String drugId = request.getParameter("studentId");
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
-			studentDao.studentDelete(con, studentId);
+//			studentDao.studentDelete(con, studentId);
+			drugDao.drugDelete(con, Integer.parseInt(drugId));
 			request.getRequestDispatcher("student?action=list").forward(
 					request, response);
 		} catch (Exception e) {
@@ -238,28 +247,37 @@ public class StudentServlet extends HttpServlet {
 
 	private void studentSave(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		String studentId = request.getParameter("studentId");
-		String userName = request.getParameter("userName");
-		String password = request.getParameter("password");
-		String dormBuildId = request.getParameter("dormBuildId");
-		String dormName = request.getParameter("dormName");
-		String name = request.getParameter("name");
-		String sex = request.getParameter("sex");
-		String tel = request.getParameter("tel");
-		Student student = new Student(userName, password,
-				Integer.parseInt(dormBuildId), dormName, name, sex, tel);
-		if (StringUtil.isNotEmpty(studentId)) {
-			student.setStudentId(Integer.parseInt(studentId));
+		String name = request.getParameter("drugName");
+		String buyingPrice = request.getParameter("buyingPrice");
+		String sellingPrice = request.getParameter("sellingPrice");
+		String counterId = request.getParameter("counterId");
+		String quantity = request.getParameter("quantity");
+		String description = request.getParameter("description");
+		String deadline = request.getParameter("deadline");
+		String drugId = request.getParameter("drugId");
+//		String tel = request.getParameter("tel");
+//		Student student = new Student(userName, password,
+//				Integer.parseInt(dormBuildId), dormName, name, sex, tel);
+		Drug drug = new Drug();
+		drug.setBuyingPrice(Double.parseDouble(buyingPrice));
+		drug.setDeadline(deadline);
+		drug.setDescription(description);
+		drug.setCounterId(Integer.parseInt(counterId));
+		drug.setName(name);
+		drug.setSellingPrice(Double.parseDouble(sellingPrice));
+		if (StringUtil.isNotEmpty(drugId)) {
+			drug.setDrugId(Integer.parseInt(drugId));
 		}
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
 			int saveNum = 0;
-			if (StringUtil.isNotEmpty(studentId)) {
-				saveNum = studentDao.studentUpdate(con, student);
-			} else if (studentDao.haveNameByNumber(con, student.getStuNumber())) {
-				request.setAttribute("student", student);
-				request.setAttribute("error", "该学号已存在");
+			if (StringUtil.isNotEmpty(drugId)) {
+//				saveNum = studentDao.studentUpdate(con, drug);
+				saveNum = drugDao.drugUpdate(con,drug);
+			} else if (drugDao.haveName(con, drug.getName())) {
+				request.setAttribute("drug", drug);
+				request.setAttribute("error", "该药品已经存在了！");
 				request.setAttribute("mainPage", "admin/studentSave.jsp");
 				request.getRequestDispatcher("mainAdmin.jsp").forward(request,
 						response);
@@ -270,13 +288,13 @@ public class StudentServlet extends HttpServlet {
 				}
 				return;
 			} else {
-				saveNum = studentDao.studentAdd(con, student);
+				saveNum = drugDao.drugAdd(con, drug);
 			}
 			if (saveNum > 0) {
 				request.getRequestDispatcher("student?action=list").forward(
 						request, response);
 			} else {
-				request.setAttribute("student", student);
+				request.setAttribute("student", drug);
 				request.setAttribute("error", "保存失败");
 				request.setAttribute("mainPage", "admin/studentSave.jsp");
 				request.getRequestDispatcher("mainAdmin.jsp").forward(request,
@@ -295,14 +313,16 @@ public class StudentServlet extends HttpServlet {
 
 	private void studentPreSave(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		String studentId = request.getParameter("studentId");
+		String drugId = request.getParameter("studentId");
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
-			request.setAttribute("dormBuildList", studentDao.dormBuildList(con));
-			if (StringUtil.isNotEmpty(studentId)) {
-				Student student = studentDao.studentShow(con, studentId);
-				request.setAttribute("student", student);
+			request.setAttribute("counterList", counterDao.listCounter(con));
+			if (StringUtil.isNotEmpty(drugId)) {
+//				Student student = studentDao.studentShow(con, studentId);
+				Drug drug = drugDao.getDrugById(con, Integer.parseInt(drugId));
+				request.setAttribute("drug", drug);
+//				request.setAttribute("student", student);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -318,7 +338,7 @@ public class StudentServlet extends HttpServlet {
 				.forward(request, response);
 	}
 	
-	private void drugSearch(HttpServletRequest request,HttpServletResponse response,Drug condition) {
+	private void drugSearch(HttpServletRequest request,HttpServletResponse response,Map<String,String> condition) {
 		Connection con = null;
 		try{
 			con = dbUtil.getCon();
