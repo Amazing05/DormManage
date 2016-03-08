@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>药品管理系统</title>
+<title>药品管理系统 s</title>
 <link href="${pageContext.request.contextPath}/style/dorm.css" rel="stylesheet">
 <link href="${pageContext.request.contextPath}/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="${pageContext.request.contextPath}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
