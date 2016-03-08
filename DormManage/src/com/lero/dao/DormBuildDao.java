@@ -35,13 +35,13 @@ public class DormBuildDao {
 		return counterList;
 	}
 	
-	public static String dormBuildName(Connection con, int dormBuildId)throws Exception {
-		String sql = "select * from t_dormBuild where dormBuildId=?";
+	public static String getDrugName(Connection con, int drugId)throws Exception {
+		String sql = "select * from drug where drugId=?";
 		PreparedStatement pstmt = con.prepareStatement(sql);
-		pstmt.setInt(1, dormBuildId);
+		pstmt.setInt(1, drugId);
 		ResultSet rs = pstmt.executeQuery();
 		if(rs.next()) {
-			return rs.getString("dormBuildName");
+			return rs.getString("name");
 		}
 		return null;
 	}

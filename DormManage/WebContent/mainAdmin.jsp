@@ -89,7 +89,7 @@
 					<li><a href="drugSeller?action=list"><i class="icon-chevron-right"></i>售药员管理</a></li>
 					<li><a href="student?action=list"><i class="icon-chevron-right"></i>药品管理</a></li>
 					<li><a href="dormBuild?action=list"><i class="icon-chevron-right"></i>柜台管理</a></li>
-					<li><a href="record?action=list"><i class="icon-chevron-right"></i>缺勤记录</a></li>
+					<li><a href="record?action=list"><i class="icon-chevron-right"></i>售药记录管理</a></li>
 					<li><a href="password?action=preChange"><i class="icon-chevron-right"></i>修改密码</a></li>
 					<li><a href="login.jsp"><i class="icon-chevron-right"></i>退出系统</a></li>
 				</ul>

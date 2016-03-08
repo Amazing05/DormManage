@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lero.model.DormBuild;
+import com.lero.model.Drug;
 import com.lero.model.Student;
 import com.lero.util.StringUtil;
 
@@ -67,7 +68,7 @@ public class StudentDao {
 			student.setStudentId(rs.getInt("studentId"));
 			int dormBuildId = rs.getInt("dormBuildId");
 			student.setDormBuildId(dormBuildId);
-			student.setDormBuildName(DormBuildDao.dormBuildName(con, dormBuildId));
+			//student.setDormBuildName(DormBuildDao.dormBuildName(con, dormBuildId));
 			student.setDormName(rs.getString("dormName"));
 			student.setName(rs.getString("name"));
 			student.setSex(rs.getString("sex"));
@@ -79,19 +80,21 @@ public class StudentDao {
 		return studentList;
 	}
 	
-	public static Student getNameById(Connection con, String studentNumber, int dormBuildId)throws Exception {
-		String sql = "select * from t_student t1 where t1.stuNum=? and t1.dormBuildId=?";
+	public static Drug getNameById(Connection con, String drugName)throws Exception {
+		String sql = "select * from drug t1 where t1.name=? ";
 		PreparedStatement pstmt=con.prepareStatement(sql);
-		pstmt.setString(1, studentNumber);
-		pstmt.setInt(2, dormBuildId);
+		pstmt.setString(1, drugName);
 		ResultSet rs=pstmt.executeQuery();
-		Student student = new Student();
+		String rtn="";
+		Drug drug=null;
 		if(rs.next()) {
-			student.setName(rs.getString("name"));
-			student.setDormBuildId(rs.getInt("dormBuildId"));
-			student.setDormName(rs.getString("dormName"));
+			drug=new Drug();
+			drug.setName(rs.getString("name"));
+			drug.setBuyingPrice(rs.getDouble("buyingPrice"));
+			drug.setDrugId(rs.getInt("drugId"));
+			drug.setQuantity(rs.getInt("quantity"));
 		}
-		return student;
+		return drug;
 	}
 	
 	public boolean haveNameByNumber(Connection con, String studentNumber)throws Exception {
@@ -127,7 +130,7 @@ public class StudentDao {
 			student.setStudentId(rs.getInt("studentId"));
 			int dormBuildId = rs.getInt("dormBuildId");
 			student.setDormBuildId(dormBuildId);
-			student.setDormBuildName(DormBuildDao.dormBuildName(con, dormBuildId));
+			//student.setDormBuildName(DormBuildDao.dormBuildName(con, dormBuildId));
 			student.setDormName(rs.getString("dormName"));
 			student.setName(rs.getString("name"));
 			student.setSex(rs.getString("sex"));
@@ -185,7 +188,7 @@ public class StudentDao {
 			student.setStudentId(rs.getInt("studentId"));
 			int dormBuildId = rs.getInt("dormBuildId");
 			student.setDormBuildId(dormBuildId);
-			student.setDormBuildName(DormBuildDao.dormBuildName(con, dormBuildId));
+			//student.setDormBuildName(DormBuildDao.dormBuildName(con, dormBuildId));
 			student.setDormName(rs.getString("dormName"));
 			student.setName(rs.getString("name"));
 			student.setSex(rs.getString("sex"));

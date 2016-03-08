@@ -170,7 +170,8 @@ public class DrugServlet extends HttpServlet{
 			} else if("dormManager".equals((String)currentUserType)) {
 				DormManager manager = (DormManager)(session.getAttribute("currentUser"));
 				int buildId = manager.getDormBuildId();
-				String buildName = DormBuildDao.dormBuildName(con, buildId);
+			//	String buildName = DormBuildDao.dormBuildName(con, buildId);
+				String buildName ="";
 				List<Student> studentList = studentDao.studentListWithBuild(con, student, buildId);
 				request.setAttribute("dormBuildName", buildName);
 				request.setAttribute("studentList", studentList);

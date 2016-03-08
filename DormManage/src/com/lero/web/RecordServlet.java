@@ -2,8 +2,10 @@ package com.lero.web;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,9 +15,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.lero.dao.DormBuildDao;
+import com.lero.dao.DrugDao;
 import com.lero.dao.RecordDao;
 import com.lero.dao.StudentDao;
+import com.lero.model.Consumerecord;
 import com.lero.model.DormManager;
+import com.lero.model.Drug;
+import com.lero.model.DrugSeller;
 import com.lero.model.Record;
 import com.lero.model.Student;
 import com.lero.util.DbUtil;
@@ -49,13 +55,16 @@ public class RecordServlet extends HttpServlet{
 		String action = request.getParameter("action");
 		String startDate = request.getParameter("startDate");
 		String endDate = request.getParameter("endDate");
-		
+		String drugName="";
 		Record record = new Record();
+		Consumerecord consumerecord=new Consumerecord();
 		if("preSave".equals(action)) {
 			recordPreSave(request, response);
 			return;
 		} else if("save".equals(action)){
-			recordSave(request, response);
+	
+					recordSave(request, response);
+				
 			return;
 		} else if("delete".equals(action)){
 			recordDelete(request, response);
@@ -63,7 +72,8 @@ public class RecordServlet extends HttpServlet{
 		} else if("list".equals(action)) {
 			if(StringUtil.isNotEmpty(s_studentText)) {
 				if("name".equals(searchType)) {
-					record.setStudentName(s_studentText);
+					//record.setStudentName(s_studentText);
+					drugName=s_studentText;
 				} else if("number".equals(searchType)) {
 					record.setStudentNumber(s_studentText);
 				} else if("dorm".equals(searchType)) {
@@ -117,18 +127,21 @@ public class RecordServlet extends HttpServlet{
 		try {
 			con=dbUtil.getCon();
 			if("admin".equals((String)currentUserType)) {
-				List<Record> recordList = recordDao.recordList(con, record);
-				request.setAttribute("dormBuildList", recordDao.dormBuildList(con));
-				request.setAttribute("recordList", recordList);
+				List<Consumerecord> consumerecordList=recordDao.recordListWithDrugSellerNoSellerId(con, drugName,startDate, endDate);
+				request.setAttribute("recordList", consumerecordList);
 				request.setAttribute("mainPage", "admin/record.jsp");
 				request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 			} else if("dormManager".equals((String)currentUserType)) {
-				DormManager manager = (DormManager)(session.getAttribute("currentUser"));
-				int buildId = manager.getDormBuildId();
-				String buildName = DormBuildDao.dormBuildName(con, buildId);
-				List<Record> recordList = recordDao.recordListWithBuild(con, record, buildId);
-				request.setAttribute("dormBuildName", buildName);
-				request.setAttribute("recordList", recordList);
+				//DormManager manager = (DormManager)(session.getAttribute("currentUser"));
+				DrugSeller drugSeller=(DrugSeller)(session.getAttribute("currentUser"));
+				//int buildId = manager.getDormBuildId();
+				int drugSellerId=drugSeller.getDrugSellerId();
+				//String buildName = DormBuildDao.dormBuildName(con, buildId);
+				String drugSellerName=drugSeller.getName();
+				//List<Record> recordList = recordDao.recordListWithBuild(con, record, buildId);
+				List<Consumerecord> consumerecordList=recordDao.recordListWithDrugSeller(con, drugName, drugSellerId, startDate, endDate);
+				request.setAttribute("dormBuildName", drugSellerName);
+				request.setAttribute("recordList", consumerecordList);
 				request.setAttribute("mainPage", "dormManager/record.jsp");
 				request.getRequestDispatcher("mainManager.jsp").forward(request, response);
 			} else if("student".equals((String)currentUserType)) {
@@ -155,6 +168,8 @@ public class RecordServlet extends HttpServlet{
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
+			Consumerecord consumerecord  =recordDao.getDrugIdByConsumerecordId(con, recordId);
+			DrugDao.drugUpdateDelete(con, consumerecord);
 			recordDao.recordDelete(con, recordId);
 			request.getRequestDispatcher("record?action=list").forward(request, response);
 		} catch (Exception e) {
@@ -169,12 +184,20 @@ public class RecordServlet extends HttpServlet{
 	}
 
 	private void recordSave(HttpServletRequest request,
-			HttpServletResponse response)throws ServletException, IOException {
+			HttpServletResponse response) {
 		String recordId = request.getParameter("recordId");
-		String studentNumber = request.getParameter("studentNumber");
+		String drugName=request.getParameter("drugName");
+		String quantity = request.getParameter("quantity");
+		String totalPrice = request.getParameter("totalPrice");
+		java.text.SimpleDateFormat formatter = new SimpleDateFormat( "yyyy-MM-dd ");
 		String date = request.getParameter("date");
-		String detail = request.getParameter("detail");
-		Record record = new Record(studentNumber, date, detail); 
+		String description = request.getParameter("description");
+		Consumerecord record = new Consumerecord(); 
+		record.setDrugName(drugName);
+	
+		record.setQuantity(Integer.parseInt(quantity));
+		record.setDescription(description);
+			record.setDate(RecordDao.stringToDate(date));
 		if(StringUtil.isNotEmpty(recordId)) {
 			if(Integer.parseInt(recordId)!=0) {
 				record.setRecordId(Integer.parseInt(recordId));
@@ -185,22 +208,40 @@ public class RecordServlet extends HttpServlet{
 			con = dbUtil.getCon();
 			int saveNum = 0;
 			HttpSession session = request.getSession();
-			DormManager manager = (DormManager)(session.getAttribute("currentUser"));
-			int buildId = manager.getDormBuildId();
-			Student student = StudentDao.getNameById(con, studentNumber, buildId);
-			if(student.getName() == null) {
+			DrugSeller drugSeller=(DrugSeller)(session.getAttribute("currentUser"));
+			Drug drug = StudentDao.getNameById(con,drugName);
+			if(drug ==null) {
 				request.setAttribute("record", record);
-				request.setAttribute("error", "学号不在您管理的宿舍楼内");
+				request.setAttribute("error", "该药品不存在");
 				request.setAttribute("mainPage", "dormManager/recordSave.jsp");
 				request.getRequestDispatcher("mainManager.jsp").forward(request, response);
 			} else {
-				record.setDormBuildId(student.getDormBuildId());
-				record.setStudentName(student.getName());
-				record.setDormName(student.getDormName());
+				record.setDrugSellerId(drugSeller.getCounterId());
+
 				if(StringUtil.isNotEmpty(recordId) && Integer.parseInt(recordId)!=0) {
+					if(drug.getQuantity()-Integer.parseInt(quantity)<0){
+						request.setAttribute("record", record);
+						SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");   
+						String sysDatetime = fmt.format(record.getDate());
+						request.setAttribute("date", sysDatetime);
+						request.setAttribute("error", "该药品余量不足");
+						request.setAttribute("mainPage", "dormManager/recordSave.jsp");
+						request.getRequestDispatcher("mainManager.jsp").forward(request, response);
+						return;
+					}
 					saveNum = recordDao.recordUpdate(con, record);
 				} else {
-					saveNum = recordDao.recordAdd(con, record);
+					if(drug.getQuantity()-Integer.parseInt(quantity)<0){
+						SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");   
+						String sysDatetime = fmt.format(record.getDate());
+						request.setAttribute("date", sysDatetime);
+						request.setAttribute("record", record);
+						request.setAttribute("error", "该药品余量不足");
+						request.setAttribute("mainPage", "dormManager/recordSave.jsp");
+						request.getRequestDispatcher("mainManager.jsp").forward(request, response);
+						return;
+					}
+					saveNum = recordDao.recordAdd(con, record,drugSeller.getDrugSellerId());
 				}
 				if(saveNum > 0) {
 					request.getRequestDispatcher("record?action=list").forward(request, response);
@@ -230,7 +271,7 @@ public class RecordServlet extends HttpServlet{
 		try {
 			con = dbUtil.getCon();
 			if (StringUtil.isNotEmpty(recordId)) {
-				Record record = recordDao.recordShow(con, recordId);
+				Consumerecord record = recordDao.recordShow(con, recordId);
 				request.setAttribute("record", record);
 			} else {
 				Calendar rightNow = Calendar.getInstance();       

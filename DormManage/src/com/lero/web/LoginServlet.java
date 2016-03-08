@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 import com.lero.dao.UserDao;
 import com.lero.model.Admin;
 import com.lero.model.DormManager;
+import com.lero.model.DrugSeller;
+import com.lero.model.Login;
 import com.lero.model.Student;
 import com.lero.util.DbUtil;
 
@@ -49,6 +51,7 @@ public class LoginServlet extends HttpServlet {
 			DormManager currentDormManager = null;
 			Student currentStudent = null;
 			if("admin".equals(userType)) {
+				
 				Admin admin = new Admin(userName, password);
 				currentAdmin = userDao.Login(con, admin);
 //				currentAdmin = new Admin();
@@ -68,8 +71,13 @@ public class LoginServlet extends HttpServlet {
 					request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 				}
 			} else if("dormManager".equals(userType)) {
+				Login login =new Login();
+				login.setUserName(userName);
+				login.setUserPassword(password);
+				DrugSeller drugSeller=new DrugSeller();
+				drugSeller=userDao.login(con, login.getUserName(),login.getUserPassword());
 				DormManager dormManager = new DormManager(userName, password);
-//				currentDormManager = userDao.Login(con, dormManager);
+				currentDormManager = userDao.Login(con, dormManager);
 				currentDormManager = new DormManager();
 				if(currentDormManager == null) {
 					request.setAttribute("dormManager", dormManager);
@@ -81,8 +89,9 @@ public class LoginServlet extends HttpServlet {
 					} else {
 						deleteCookie(userName, request, response);
 					}
+					
 					session.setAttribute("currentUserType", "dormManager");
-					session.setAttribute("currentUser", currentDormManager);
+					session.setAttribute("currentUser", drugSeller);
 					request.setAttribute("mainPage", "dormManager/blank.jsp");
 					request.getRequestDispatcher("mainManager.jsp").forward(request, response);
 				}

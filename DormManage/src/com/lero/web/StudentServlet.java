@@ -186,7 +186,8 @@ public class StudentServlet extends HttpServlet {
 					DormManager manager = (DormManager) (session
 							.getAttribute("currentUser"));
 					int buildId = manager.getDormBuildId();
-					String buildName = DormBuildDao.dormBuildName(con, buildId);
+					String buildName="";
+					//String buildName = DormBuildDao.dormBuildName(con, buildId);
 					List<Student> studentList = studentDao
 							.studentListWithBuild(con, student, buildId);
 					request.setAttribute("dormBuildName", buildName);
