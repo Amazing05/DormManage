@@ -84,4 +84,15 @@
   	<servlet-name>passwordServlet</servlet-name>
   	<url-pattern>/password</url-pattern>
   </servlet-mapping>
+  
+  
+   <servlet>
+  	<servlet-name>drugServlet</servlet-name>
+  	<servlet-class>com.lero.web.DrugServlet</servlet-class>
+  </servlet>
+  
+  <servlet-mapping>
+  	<servlet-name>drugServlet</servlet-name>
+  	<url-pattern>/drug</url-pattern>
+  </servlet-mapping>
 </web-app>
