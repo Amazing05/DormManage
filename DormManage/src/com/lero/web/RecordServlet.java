@@ -92,6 +92,7 @@ public class RecordServlet extends HttpServlet{
 		} else if("search".equals(action)){
 			if(StringUtil.isNotEmpty(s_studentText)) {
 				if("name".equals(searchType)) {
+					drugName=s_studentText;
 					record.setStudentName(s_studentText);
 				} else if("number".equals(searchType)) {
 					record.setStudentNumber(s_studentText);
