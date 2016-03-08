@@ -51,7 +51,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>宿舍管理系统登录</title>
+<title>药品管理系统登录</title>
 <link href="${pageContext.request.contextPath}/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="${pageContext.request.contextPath}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
 <script src="${pageContext.request.contextPath}/bootstrap/js/jQuery.js"></script>
@@ -133,14 +133,14 @@
 <body>
 <div class="container">
       <form name="myForm" class="form-signin" action="login" method="post" onsubmit="return checkForm()">
-        <h2 class="form-signin-heading"><font color="gray">宿舍管理系统</font></h2>
+        <h2 class="form-signin-heading"><font color="gray">药品管理系统</font></h2>
         <input id="userName" name="userName" value="${user.userName }" type="text" class="input-block-level" placeholder="用户名...">
         <input id="password" name="password" value="${user.password }" type="password" class="input-block-level" placeholder="密码..." >
         <label class="radio inline">
       	  	<input id="admin" type="radio" name="userType" value="admin"  checked/> 系统管理员
 		</label>
 		<label class="radio inline">
-			<input id="dormManager" type="radio" name="userType" value="dormManager" ${userType==2?'checked':''} /> 宿舍管理员
+			<input id="dormManager" type="radio" name="userType" value="dormManager" ${userType==2?'checked':''} /> 药品销售员
 		</label>
 		<label class="radio inline">
 			<input id="student" type="radio" name="userType" value="student"  ${userType==3?'checked':''}/> 学生
