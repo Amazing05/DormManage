@@ -46,7 +46,7 @@ window.onload = function(){
 
 <div class="data_list">
 		<div class="data_list_title">
-			缺勤记录
+			药品出售记录
 		</div>
 		<form name="myForm" class="form-search" method="post" action="record?action=search" style="padding-bottom: 0px">
 				<span class="data_search">
@@ -59,17 +59,12 @@ window.onload = function(){
                     	<input id="endDate" name="endDate" style="width:120px;height: 30px;" placeholder="终止日期" type="text" value="${endDate }" readonly>
                     	<span class="add-on"><i class="icon-remove"></i></span>
 						<span class="add-on"><i class="icon-th"></i></span>
-               		 </span>
-					<select id="buildToSelect" name="buildToSelect" style="width: 110px;">
-					<option value="">全部宿舍楼</option>
-					<c:forEach var="dormBuild" items="${dormBuildList }">
-						<option value="${dormBuild.dormBuildId }" ${buildToSelect==dormBuild.dormBuildId?'selected':'' }>${dormBuild.dormBuildName }</option>
-					</c:forEach>
-					</select>
+               		</span>
+<%-- 					<span><font style="font-family: '黑体'; font-style: 'bold'; font-size: 20px" color="blue">${dormBuildName }&nbsp;&nbsp;</font></span> --%>
 					<select id="searchType" name="searchType" style="width: 80px;">
-					<option value="name">姓名</option>
-					<option value="number" ${searchType eq "number"?'selected':'' }>学号</option>
-					<option value="dorm" ${searchType eq "dorm"?'selected':'' }>寝室</option>
+					<option value="name">药品名</option>
+<%-- 					<option value="number" ${searchType eq "number"?'selected':'' }>学号</option>
+					<option value="dorm" ${searchType eq "dorm"?'selected':'' }>寝室</option> --%>
 					</select>
 					&nbsp;<input id="s_studentText" name="s_studentText" type="text"  style="width:120px;height: 30px;" class="input-medium search-query" value="${s_studentText }">
 					&nbsp;<button type="submit" class="btn btn-info" onkeydown="if(event.keyCode==13) myForm.submit()">搜索</button>
@@ -79,11 +74,11 @@ window.onload = function(){
 			<table class="table table-striped table-bordered table-hover datatable">
 				<thead>
 					<tr>
+					<th>编号</th>
+					<th>药品</th>
+					<th>数量</th>
+					<th>总价钱</th>
 					<th>日期</th>
-					<th>学号</th>
-					<th>姓名</th>
-					<th>宿舍楼</th>
-					<th>寝室</th>
 					<th>备注</th>
 					<th>操作</th>
 					</tr>
@@ -91,12 +86,12 @@ window.onload = function(){
 				<tbody>
 				<c:forEach  varStatus="i" var="record" items="${recordList }">
 					<tr>
+					<td>${i.count+(page-1)*pageSize }</td>
+						<td>${record.drugName }</td>
+						<td>${record.quantity }</td>
+						<td>${record.totalPrice }</td>
 						<td>${record.date }</td>
-						<td>${record.studentNumber }</td>
-						<td>${record.studentName }</td>
-						<td>${record.dormBuildName==null?"无":record.dormBuildName }</td>
-						<td>${record.dormName }</td>
-						<td>${record.detail }</td>
+						<td>${record.description==null?"无":record.description }</td>
 						<td>
 							<button class="btn btn-mini btn-danger" type="button" onclick="recordDelete(${record.recordId })">删除</button></td>
 					</tr>
