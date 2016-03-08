@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>宿舍管理系统</title>
+<title>药品管理系统</title>
 <link href="${pageContext.request.contextPath}/style/dorm.css" rel="stylesheet">
 <link href="${pageContext.request.contextPath}/bootstrap/css/bootstrap.css" rel="stylesheet">
 <link href="${pageContext.request.contextPath}/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
@@ -77,7 +77,7 @@
 <body>
 <div class="container-fluid" style="padding-right: 0px;padding-left: 0px;">
 	<div region="north" style="height: 100px;background-image: url('images/bg.jpg')">
-		<div align="left" style="width: 80%;height:100px ;float: left;padding-top: 40px;padding-left: 30px;" ><font color="white" size="6" >宿舍管理系统</font></div>
+		<div align="left" style="width: 80%;height:100px ;float: left;padding-top: 40px;padding-left: 30px;" ><font color="white" size="6" >药品管理系统</font></div>
 		<div style="padding-top: 70px;padding-right: 20px;">当前用户：&nbsp;<font color="red" >${currentUser.userName }</font></div>
 	</div>
 </div>
@@ -87,9 +87,9 @@
 				<ul class="nav nav-list bs-docs-sidenav">
 					<li><a href="blank"><i class="icon-chevron-right"></i>首页</a></li>
 					<li><a href="drugSeller?action=list"><i class="icon-chevron-right"></i>售药员管理</a></li>
-					<li><a href="student?action=list"><i class="icon-chevron-right"></i>药品管理</a></li>
+					<li><a href="drug?action=list"><i class="icon-chevron-right"></i>药品管理</a></li>
 					<li><a href="dormBuild?action=list"><i class="icon-chevron-right"></i>柜台管理</a></li>
-					<li><a href="record?action=list"><i class="icon-chevron-right"></i>售药记录管理</a></li>
+					<li><a href="record?action=list"><i class="icon-chevron-right"></i>缺勤记录</a></li>
 					<li><a href="password?action=preChange"><i class="icon-chevron-right"></i>修改密码</a></li>
 					<li><a href="login.jsp"><i class="icon-chevron-right"></i>退出系统</a></li>
 				</ul>
@@ -100,4 +100,4 @@
 			</div>
 		</div>
 </body>
-</html>
+</html>ss
