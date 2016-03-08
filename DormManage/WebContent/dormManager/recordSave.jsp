@@ -19,11 +19,11 @@
 <div class="data_list">
 		<div class="data_list_title">
 		<c:choose>
-			<c:when test="${student.studentId!=null }">
-				修改缺勤记录
+			<c:when test="${record.recordId!=null }">
+				修改售药记录
 			</c:when>
 			<c:otherwise>
-				添加缺勤记录
+				添加售药记录
 			</c:otherwise>
 		</c:choose>
 		</div>
@@ -32,16 +32,21 @@
 				<input type="hidden" id="recordId" name="recordId" value="${record.recordId }"/>
 					<table align="center">
 						<tr>
-							<td><font color="red">*</font>学号：</td>
-							<td><input type="text" id="studentNumber"  name="studentNumber" value="${record.studentNumber==null?studentNumber:record.studentNumber }"  style="margin-top:5px;height:30px;" ${studentNumber!=null?'readonly':'' }/></td>
+							<td><font color="red">*</font>药品：</td>
+							<td><input type="text" id="drugName"  name="drugName" value="${record.drugName}"  style="margin-top:5px;height:30px;" /></td>
 						</tr>
 						<tr>
+							<td><font color="red">*</font>数量：</td>
+							<td><input type="text" id="quantity"  name="quantity" value="${record.quantity}"  style="margin-top:5px;height:30px;" /></td>
+						</tr>
+			
+						<tr>
 							<td><font color="red">*</font>日期：</td>
-							<td><input type="text" id="date"  name="date" value="${record.date==null?date:record.date }"  style="margin-top:5px;height:30px;" readonly="readonly" /></td>
+							<td><input type="text" id="date"  name="date" value="${date!=null?date:record.date }"  style="margin-top:5px;height:30px;" readonly="readonly" /></td>
 						</tr>
 						<tr>
 							<td><font color="red">*</font>备注：</td>
-							<td><input type="text" id="detail"  name="detail" value="${record.detail }"  style="margin-top:5px;height:30px;" /></td>
+							<td><input type="text" id="description"  name="description" value="${record.description }"  style="margin-top:5px;height:30px;" /></td>
 						</tr>
 					</table>
 					<div align="center">

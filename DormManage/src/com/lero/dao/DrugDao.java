@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.lero.model.Consumerecord;
 import com.lero.model.Counter;
 import com.lero.model.Drug;
 import com.lero.model.GenericType;
@@ -143,7 +144,7 @@ public class DrugDao {
 	}
 	
 	
-	public Drug getDrugById(Connection con, int drugId)throws Exception {
+	public static Drug getDrugById(Connection con, int drugId)throws Exception {
 		String sql = "select * from drug t1 where t1.drugId=?";
 		PreparedStatement pstmt=con.prepareStatement(sql);
 		pstmt.setInt(1, drugId);
@@ -170,7 +171,20 @@ public class DrugDao {
 		return pstmt.executeUpdate();
 	}
 		
+	public static int drugUpdate(Connection con, Drug drug,int sellingCount)throws Exception {
+		String sql = "update drug set quantity=? where drugId=?";
+		PreparedStatement pstmt=con.prepareStatement(sql);
+		pstmt.setInt(1, drug.getQuantity()-sellingCount);
+		pstmt.setInt(2, drug.getDrugId());
+		return pstmt.executeUpdate();
+	}
 	
-	
-	
+	public static int drugUpdateDelete(Connection con, Consumerecord consumerecord)throws Exception {
+		int sellingCount= getDrugById(con,consumerecord.getDrugId()).getQuantity();
+		String sql = "update drug set quantity=? where drugId=?";
+		PreparedStatement pstmt=con.prepareStatement(sql);
+		pstmt.setInt(1, consumerecord.getQuantity()+sellingCount);
+		pstmt.setInt(2, consumerecord.getDrugId());
+		return pstmt.executeUpdate();
+	}
 }

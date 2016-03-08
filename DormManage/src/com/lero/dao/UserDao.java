@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 
 import com.lero.model.Admin;
 import com.lero.model.DormManager;
+import com.lero.model.DrugSeller;
 import com.lero.model.Student;
 
 public class UserDao {
@@ -29,6 +30,26 @@ public class UserDao {
 		return resultAdmin;
 	}
 	
+	public DrugSeller login(Connection con, String name,String password )throws Exception {
+		String sql = "select * from login where userName=? and userPassword=?";
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, name);
+		pstmt.setString(2, name);
+		ResultSet rs = pstmt.executeQuery();
+		DrugSeller drugSeller=new DrugSeller();
+		if(rs.next()) {
+			int userId=rs.getInt("userId");
+			String sqlTemp = "select * from drugseller where drugsellerId=? ";
+			PreparedStatement pstmtTemp = con.prepareStatement(sqlTemp);
+			pstmtTemp.setInt(1, userId);
+			ResultSet rsTemp = pstmtTemp.executeQuery();
+			if(rsTemp.next()) {
+				drugSeller.setDrugSellerId(userId);
+				drugSeller.setName(rsTemp.getString("name"));
+			}
+		}
+		return drugSeller;
+	}
 	public DormManager Login(Connection con, DormManager dormManager)throws Exception {
 		DormManager resultDormManager = null;
 		String sql = "select * from t_dormmanager where userName=? and password=?";
@@ -63,7 +84,7 @@ public class UserDao {
 			resultStudent.setPassword(rs.getString("password"));
 			int dormBuildId = rs.getInt("dormBuildId");
 			resultStudent.setDormBuildId(dormBuildId);
-			resultStudent.setDormBuildName(DormBuildDao.dormBuildName(con, dormBuildId));
+			//resultStudent.setDormBuildName(DormBuildDao.dormBuildName(con, dormBuildId));
 			resultStudent.setDormName(rs.getString("dormName"));
 			resultStudent.setName(rs.getString("name"));
 			resultStudent.setSex(rs.getString("sex"));

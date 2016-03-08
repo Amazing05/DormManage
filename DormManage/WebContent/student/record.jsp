@@ -61,23 +61,23 @@ window.onload = function(){
 			<table class="table table-striped table-bordered table-hover datatable">
 				<thead>
 					<tr>
+					<th>编号</th>
+					<th>药品</th>
+					<th>数量</th>
+					<th>总价钱</th>
 					<th>日期</th>
-					<th>学号</th>
-					<th>姓名</th>
-					<th>宿舍楼</th>
-					<th>寝室</th>
 					<th>备注</th>
 					</tr>
 				</thead>
 				<tbody>
 				<c:forEach  varStatus="i" var="record" items="${recordList }">
 					<tr>
+					    <td>${i.count+(page-1)*pageSize }</td>
+						<td>${record.drugName }</td>
+						<td>${record.quantity }</td>
+						<td>${record.totalPrice }</td>
 						<td>${record.date }</td>
-						<td>${record.studentNumber }</td>
-						<td>${record.studentName }</td>
-						<td>${record.dormBuildName==null?"无":record.dormBuildName }</td>
-						<td>${record.dormName }</td>
-						<td>${record.detail }</td>
+						<td>${record.description }</td>
 					</tr>
 				</c:forEach>
 				</tbody>
