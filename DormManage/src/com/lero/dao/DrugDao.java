@@ -24,7 +24,7 @@ public class DrugDao {
 	 * @param con
 	 * @return List<Drug>，DB中没有数据时返回一个size为0的List<Drug>
 	 */
-	private List<Drug> listDrugs(Connection con) {
+	public List<Drug> listDrugs(Connection con) {
 
 		List<Drug> list = new ArrayList<Drug>();
 		StringBuffer str = new StringBuffer("select * from drug g");

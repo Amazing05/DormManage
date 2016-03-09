@@ -2,6 +2,7 @@ package com.lero.web;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,11 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.lero.dao.CounterDao;
-import com.lero.dao.DormBuildDao;
 import com.lero.dao.DrugDao;
 import com.lero.dao.StudentDao;
 import com.lero.model.Counter;
-import com.lero.model.DormManager;
 import com.lero.model.Drug;
 import com.lero.model.DrugSeller;
 import com.lero.model.GenericType;
@@ -213,6 +212,11 @@ public class DrugServlet extends HttpServlet {
 		} else if("search".equals(action)){
 			Map<String,String> condition = new HashMap<String,String>();
 			
+			if(currentUserType.equals("dormManager")){
+				condition.put("name", s_studentText);
+				drugSearch1(request,response,condition);
+				return;
+			}
 			if(StringUtil.isNotEmpty(s_studentText)) {
 				// ≈–∂œ≤È—Ø¿‡–Õ
 				if("name".equals(searchType)) { 
@@ -355,6 +359,32 @@ public class DrugServlet extends HttpServlet {
 			request.setAttribute("list", list);
 			request.setAttribute("mainPage", "admin/student.jsp");
 			request.getRequestDispatcher("mainAdmin.jsp").forward(
+					request, response);
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			try{
+				dbUtil.closeCon(con);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void drugSearch1(HttpServletRequest request,HttpServletResponse response,Map<String,String> condition) {
+		Connection con = null;
+		try{
+			con = dbUtil.getCon();
+			List<GenericType<Drug,Counter,String>> listg = drugDao.listDrugs(con, condition); 
+			List<Drug> list = new ArrayList<Drug>();
+			for(GenericType<Drug,Counter,String> g : listg) {
+				list.add(g.getT1());
+			}
+			request.setAttribute("dormBuildList",
+					studentDao.dormBuildList(con));
+			request.setAttribute("drugList", list);
+			request.setAttribute("mainPage", "dormManager/student.jsp");
+			request.getRequestDispatcher("mainManager.jsp").forward(
 					request, response);
 		} catch(Exception e) {
 			e.printStackTrace();
