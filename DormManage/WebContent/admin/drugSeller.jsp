@@ -15,7 +15,7 @@
 </script>
 <div class="data_list">
 		<div class="data_list_title">
-			宿舍管理员管理
+			售药员员管理
 		</div>
 		<form name="myForm" class="form-search" method="post" action="drugSeller?action=search">
 				<button class="btn btn-success" type="button" style="margin-right: 50px;" onclick="javascript:window.location='drugSeller?action=preSave'">添加</button>

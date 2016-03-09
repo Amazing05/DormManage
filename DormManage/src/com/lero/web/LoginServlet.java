@@ -51,12 +51,10 @@ public class LoginServlet extends HttpServlet {
 			DormManager currentDormManager = null;
 			Student currentStudent = null;
 			if("admin".equals(userType)) {
-				
-				Admin admin = new Admin(userName, password);
-				currentAdmin = userDao.Login(con, admin);
+				Login loginAdmin=new Login();
+				loginAdmin=userDao.loginAdmin(con, userName,password);
 //				currentAdmin = new Admin();
-				if(currentAdmin == null) {
-					request.setAttribute("admin", admin);
+				if(loginAdmin.getLoginId()==0) {
 					request.setAttribute("error", "用户名或密码错误！");
 					request.getRequestDispatcher("login.jsp").forward(request, response);
 				} else {
@@ -66,7 +64,7 @@ public class LoginServlet extends HttpServlet {
 						deleteCookie(userName, request, response);
 					}
 					session.setAttribute("currentUserType", "admin");
-					session.setAttribute("currentUser", currentAdmin);
+					session.setAttribute("currentUser", loginAdmin);
 					request.setAttribute("mainPage", "admin/blank.jsp");
 					request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 				}
@@ -76,11 +74,7 @@ public class LoginServlet extends HttpServlet {
 				login.setUserPassword(password);
 				DrugSeller drugSeller=new DrugSeller();
 				drugSeller=userDao.login(con, login.getUserName(),login.getUserPassword());
-//				DormManager dormManager = new DormManager(userName, password);
-//				currentDormManager = userDao.Login(con, dormManager);
-//				currentDormManager = new DormManager();
-				if(drugSeller == null) {
-					request.setAttribute("dormManager", drugSeller);
+				if(drugSeller.getDrugSellerId()== 0) {
 					request.setAttribute("error", "用户名或密码错误！");
 					request.getRequestDispatcher("login.jsp").forward(request, response);
 				} else {
@@ -92,6 +86,7 @@ public class LoginServlet extends HttpServlet {
 					
 					session.setAttribute("currentUserType", "dormManager");
 					session.setAttribute("currentUser", drugSeller);
+					session.setAttribute("userPassword", password);
 					request.setAttribute("mainPage", "dormManager/blank.jsp");
 					request.getRequestDispatcher("mainManager.jsp").forward(request, response);
 				}

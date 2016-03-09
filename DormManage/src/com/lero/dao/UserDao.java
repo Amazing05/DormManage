@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import com.lero.model.Admin;
 import com.lero.model.DormManager;
 import com.lero.model.DrugSeller;
+import com.lero.model.Login;
 import com.lero.model.Student;
 
 public class UserDao {
@@ -29,12 +30,27 @@ public class UserDao {
 		}
 		return resultAdmin;
 	}
-	
+	public Login loginAdmin(Connection con, String name,String password )throws Exception {
+		String sql = "select * from login where userName=? and userPassword=? and role=?";
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setString(1, name);
+		pstmt.setString(2, password);
+		pstmt.setString(3, "admin");
+		ResultSet rs = pstmt.executeQuery();
+		Login login=new Login();
+		if(rs.next()) {
+			login.setUserName(name);
+			login.setUserPassword(password);
+			login.setUserId(rs.getInt("userId"));
+			login.setLoginId(rs.getInt("loginId"));
+		}
+		return login;
+	}
 	public DrugSeller login(Connection con, String name,String password )throws Exception {
 		String sql = "select * from login where userName=? and userPassword=?";
 		PreparedStatement pstmt = con.prepareStatement(sql);
 		pstmt.setString(1, name);
-		pstmt.setString(2, name);
+		pstmt.setString(2, password);
 		ResultSet rs = pstmt.executeQuery();
 		DrugSeller drugSeller=new DrugSeller();
 		if(rs.next()) {
@@ -95,12 +111,13 @@ public class UserDao {
 	}
 	
 	public int adminUpdate(Connection con, int adminId, String password)throws Exception {
-		String sql = "update t_admin set password=? where adminId=?";
+		String sql = "update login set userPassword=? where loginId=?";
 		PreparedStatement pstmt = con.prepareStatement(sql);
 		pstmt.setString(1, password);
 		pstmt.setInt(2, adminId);
 		return pstmt.executeUpdate();
 	}
+	
 	
 	public int managerUpdate(Connection con, int managerId, String password)throws Exception {
 		String sql = "update t_dormmanager set password=? where dormManId=?";

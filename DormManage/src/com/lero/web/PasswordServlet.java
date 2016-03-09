@@ -12,6 +12,8 @@ import javax.servlet.http.HttpSession;
 import com.lero.dao.UserDao;
 import com.lero.model.Admin;
 import com.lero.model.DormManager;
+import com.lero.model.DrugSeller;
+import com.lero.model.Login;
 import com.lero.model.Student;
 import com.lero.util.DbUtil;
 
@@ -57,10 +59,10 @@ public class PasswordServlet extends HttpServlet{
 			con = dbUtil.getCon();
 			
 			if("admin".equals((String)currentUserType)) {
-				Admin admin = (Admin)(session.getAttribute("currentUser"));
-				if(oldPassword.equals(admin.getPassword())) {
-					userDao.adminUpdate(con, admin.getAdminId(), newPassword);
-					admin.setPassword(newPassword);
+				Login login = (Login)(session.getAttribute("currentUser"));
+				if(oldPassword.equals(login.getUserPassword())) {
+					userDao.adminUpdate(con, login.getLoginId(), newPassword);
+					login.setUserPassword(newPassword);;
 					request.setAttribute("oldPassword", oldPassword);
 					request.setAttribute("newPassword", newPassword);
 					request.setAttribute("rPassword", newPassword);
@@ -76,10 +78,11 @@ public class PasswordServlet extends HttpServlet{
 					request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
 				}
 			} else if("dormManager".equals((String)currentUserType)) {
-				DormManager manager = (DormManager)(session.getAttribute("currentUser"));
-				if(oldPassword.equals(manager.getPassword())) {
-					userDao.adminUpdate(con, manager.getDormManagerId(), newPassword);
-					manager.setPassword(newPassword);
+				DrugSeller drugSeller=(DrugSeller)(session.getAttribute("currentUser"));
+				String userPassword=(String)session.getAttribute("userPassword");
+				//DormManager manager = (DormManager)(session.getAttribute("currentUser"));
+				if(oldPassword.equals(userPassword)) {
+					userDao.adminUpdate(con, drugSeller.getDrugSellerId(), newPassword);
 					request.setAttribute("oldPassword", oldPassword);
 					request.setAttribute("newPassword", newPassword);
 					request.setAttribute("rPassword", newPassword);

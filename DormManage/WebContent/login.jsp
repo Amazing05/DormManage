@@ -142,9 +142,6 @@
 		<label class="radio inline">
 			<input id="dormManager" type="radio" name="userType" value="dormManager" ${userType==2?'checked':''} /> 药品销售员
 		</label>
-		<label class="radio inline">
-			<input id="student" type="radio" name="userType" value="student"  ${userType==3?'checked':''}/> 学生
-		</label>
         <label class="checkbox">
           <input id="remember" name="remember" type="checkbox" value="remember-me" ${remember==1?'checked':''}>记住我 &nbsp;&nbsp;&nbsp;&nbsp; <font id="error" color="red">${error }</font>  
         </label>
@@ -152,7 +149,7 @@
         &nbsp;&nbsp;&nbsp;&nbsp;
         <button class="btn btn-large btn-primary" type="button" >重置</button>
 
-		<p align="center" style="padding-top: 15px;">版权所有  2014  Lero  <a href="http://www.lero.com" target="_blank">http://www.lero.com</a></p>
+		<p align="center" style="padding-top: 15px;">  <a href="http://www.lero.com" target="_blank"> </a></p>
       </form>
 </div>
 </body>
