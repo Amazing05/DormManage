@@ -19,6 +19,7 @@ import com.lero.dao.StudentDao;
 import com.lero.model.Counter;
 import com.lero.model.DormManager;
 import com.lero.model.Drug;
+import com.lero.model.DrugSeller;
 import com.lero.model.GenericType;
 import com.lero.model.Student;
 import com.lero.util.DbUtil;
@@ -183,15 +184,19 @@ public class DrugServlet extends HttpServlet {
 					request.getRequestDispatcher("mainAdmin.jsp").forward(
 							request, response);
 				} else if ("dormManager".equals((String) currentUserType)) {
-					DormManager manager = (DormManager) (session
-							.getAttribute("currentUser"));
-					int buildId = manager.getDormBuildId();
+//					DormManager manager = (DormManager) (session
+//							.getAttribute("currentUser"));
+					DrugSeller drugSeller = (DrugSeller) (session
+							 .getAttribute("currentUser"));
+//					int buildId = manager.getDormBuildId();
+					int counterId = drugSeller.getCounterId();
 					String buildName="";
 					//String buildName = DormBuildDao.dormBuildName(con, buildId);
-					List<Student> studentList = studentDao
-							.studentListWithBuild(con, student, buildId);
+//					List<Student> studentList = studentDao
+//							.studentListWithBuild(con, student, buildId);
+					List<Drug> drugList = drugDao.getDrugsByCounterId(con, counterId);
 					request.setAttribute("dormBuildName", buildName);
-					request.setAttribute("studentList", studentList);
+					request.setAttribute("drugList", drugList);
 					request.setAttribute("mainPage", "dormManager/student.jsp");
 					request.getRequestDispatcher("mainManager.jsp").forward(
 							request, response);

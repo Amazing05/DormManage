@@ -76,11 +76,11 @@ public class LoginServlet extends HttpServlet {
 				login.setUserPassword(password);
 				DrugSeller drugSeller=new DrugSeller();
 				drugSeller=userDao.login(con, login.getUserName(),login.getUserPassword());
-				DormManager dormManager = new DormManager(userName, password);
-				currentDormManager = userDao.Login(con, dormManager);
-				currentDormManager = new DormManager();
-				if(currentDormManager == null) {
-					request.setAttribute("dormManager", dormManager);
+//				DormManager dormManager = new DormManager(userName, password);
+//				currentDormManager = userDao.Login(con, dormManager);
+//				currentDormManager = new DormManager();
+				if(drugSeller == null) {
+					request.setAttribute("dormManager", drugSeller);
 					request.setAttribute("error", "用户名或密码错误！");
 					request.getRequestDispatcher("login.jsp").forward(request, response);
 				} else {

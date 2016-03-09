@@ -46,6 +46,7 @@ public class UserDao {
 			if(rsTemp.next()) {
 				drugSeller.setDrugSellerId(userId);
 				drugSeller.setName(rsTemp.getString("name"));
+				drugSeller.setCounterId(rsTemp.getInt("counterId"));
 			}
 		}
 		return drugSeller;

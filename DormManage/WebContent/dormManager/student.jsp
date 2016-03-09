@@ -40,7 +40,7 @@ window.onload = function(){
 </style>
 <div class="data_list">
 		<div class="data_list_title">
-			学生管理
+			药品管理
 		</div>
 		<form name="myForm" class="form-search" method="post" action="student?action=search" style="padding-bottom: 0px">
 				<span class="data_search">
@@ -58,27 +58,27 @@ window.onload = function(){
 			<table class="table table-striped table-bordered table-hover datatable">
 				<thead>
 					<tr>
-					<th>学号</th>
-					<th>姓名</th>
-					<th>性别</th>
-					<th>宿舍楼</th>
-					<th>寝室</th>
-					<th>电话</th>
+					<th>名称</th>
+					<th>进价</th>
+					<th>售价</th>
+<!-- 					<th>柜台名</th> -->
+					<th>库存</th>
+					<th>说明</th>
 					<th>操作</th>
 				</tr>
 				</thead>
 				<tbody>
-				<c:forEach  varStatus="i" var="student" items="${studentList }">
+				<c:forEach  varStatus="i" var="drug" items="${drugList }">
 					<tr>
 						<%-- <td>${i.count+(page-1)*pageSize }</td> --%>
-						<td>${student.userName }</td>
-						<td>${student.name }</td>
-						<td>${student.sex }</td>
-						<td>${student.dormBuildName==null?"无":student.dormBuildName }</td>
-						<td>${student.dormName }</td>
-						<td>${student.tel }</td>
+						<td>${drug.name }</td>
+						<td>${drug.buyingPrice }</td>
+						<td>${drug.sellingPrice }</td>
+<%-- 						<td>${student.dormBuildName==null?"无":student.dormBuildName }</td> --%>
+						<td>${drug.quantity }</td>
+						<td>${drug.description }</td>
 						<td>
-							<button class="btn btn-mini btn-success" type="button" onclick="javascript:window.location='record?action=preSave&studentNumber=${student.userName }'">添加缺勤记录</button>
+							<button class="btn btn-mini btn-success" type="button" onclick="javascript:window.location='record?action=preSave&studentNumber=${drug.name }'">添加缺勤记录</button>
 						</td>
 					</tr>
 				</c:forEach>

@@ -70,12 +70,6 @@ public class DrugDao {
 		value = condition.get(key);
 		
 		List<GenericType<Drug,Counter,String>>  list = new ArrayList<GenericType<Drug,Counter,String>> ();
-//		List<GenericType<Drug,Counter,String>>  listFilter = new ArrayList<GenericType<Drug,Counter,String>> ();
-//		for(Drug drug : drugList) {
-//			if(drug.filter(condition) == true){
-//				drugAfterList.add(drug);
-//			}
-//		}
 		
 
 		for(Drug drug :drugList) {
@@ -186,5 +180,29 @@ public class DrugDao {
 		pstmt.setInt(1, consumerecord.getQuantity()+sellingCount);
 		pstmt.setInt(2, consumerecord.getDrugId());
 		return pstmt.executeUpdate();
+	}
+	
+	public List<Drug> getDrugsByCounterId(Connection con,int counterId) throws Exception {
+		String sql = "select * from drug t1 where t1.counterId=?";
+		PreparedStatement pstmt = con.prepareStatement(sql);
+		pstmt.setInt(1, counterId);
+		
+		ResultSet rs=pstmt.executeQuery();
+		
+		List<Drug> drugs = new ArrayList<Drug>();
+		while(rs.next()) {
+			Drug drug = new Drug();
+			drug.setBuyingPrice(rs.getDouble("buyingPrice"));
+			drug.setCounterId(rs.getInt("counterId"));
+//			drug.setDeadline(rs.getDate("deadline"));
+			drug.setQuantity(rs.getInt("quantity"));
+			drug.setDescription(rs.getString("description"));
+			drug.setDrugId(rs.getInt("drugId"));
+			drug.setName(rs.getString("name"));
+			drug.setSellingPrice(rs.getDouble("sellingPrice"));
+			drugs.add(drug);
+		}
+		
+		return drugs;
 	}
 }
