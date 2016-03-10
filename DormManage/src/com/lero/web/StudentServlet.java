@@ -323,6 +323,7 @@ public class StudentServlet extends HttpServlet {
 //				Student student = studentDao.studentShow(con, studentId);
 				Drug drug = drugDao.getDrugById(con, Integer.parseInt(drugId));
 				request.setAttribute("drug", drug);
+				request.setAttribute("drugId", drug.getDrugId());
 //				request.setAttribute("student", student);
 			}
 		} catch (Exception e) {

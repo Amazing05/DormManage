@@ -55,13 +55,13 @@ public class DrugServlet extends HttpServlet {
 		Student student = new Student();
 		Drug drug = new Drug();
 		if ("preSave".equals(action)) {
-			studentPreSave(request, response);
+			drugPreSave(request, response);
 			return;
 		} else if ("save".equals(action)) {
-			studentSave(request, response);
+			drugSave(request, response);
 			return;
 		} else if ("delete".equals(action)) {
-			studentDelete(request, response);
+			drugDelete(request, response);
 			return;
 		} else if ("list".equals(action)) {
 			if (StringUtil.isNotEmpty(s_studentText)) {
@@ -179,7 +179,7 @@ public class DrugServlet extends HttpServlet {
 					request.setAttribute("dormBuildList",
 							studentDao.dormBuildList(con));
 					request.setAttribute("list", list);
-					request.setAttribute("mainPage", "admin/student.jsp");
+					request.setAttribute("mainPage", "admin/drug.jsp");
 					request.getRequestDispatcher("mainAdmin.jsp").forward(
 							request, response);
 				} else if ("dormManager".equals((String) currentUserType)) {
@@ -196,7 +196,7 @@ public class DrugServlet extends HttpServlet {
 					List<Drug> drugList = drugDao.getDrugsByCounterId(con, counterId);
 					request.setAttribute("dormBuildName", buildName);
 					request.setAttribute("drugList", drugList);
-					request.setAttribute("mainPage", "dormManager/student.jsp");
+					request.setAttribute("mainPage", "dormManager/drug.jsp");
 					request.getRequestDispatcher("mainManager.jsp").forward(
 							request, response);
 				}
@@ -234,15 +234,15 @@ public class DrugServlet extends HttpServlet {
 		
 	}
 
-	private void studentDelete(HttpServletRequest request,
+	private void drugDelete(HttpServletRequest request,
 			HttpServletResponse response) {
-		String drugId = request.getParameter("studentId");
+		String drugId = request.getParameter("drugId");
 		Connection con = null;
 		try {
 			con = dbUtil.getCon();
 //			studentDao.studentDelete(con, studentId);
 			drugDao.drugDelete(con, Integer.parseInt(drugId));
-			request.getRequestDispatcher("student?action=list").forward(
+			request.getRequestDispatcher("drug?action=list").forward(
 					request, response);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -255,7 +255,7 @@ public class DrugServlet extends HttpServlet {
 		}
 	}
 
-	private void studentSave(HttpServletRequest request,
+	private void drugSave(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String name = request.getParameter("drugName");
 		String buyingPrice = request.getParameter("buyingPrice");
@@ -285,7 +285,7 @@ public class DrugServlet extends HttpServlet {
 			if (StringUtil.isNotEmpty(drugId)) {
 //				saveNum = studentDao.studentUpdate(con, drug);
 				saveNum = drugDao.drugUpdate(con,drug);
-			} else if (drugDao.haveName(con, drug.getName())) {
+			} else if (drugId.equals("") && drugDao.haveName(con, drug.getName())) {
 				request.setAttribute("drug", drug);
 				request.setAttribute("error", "该药品已经存在了！");
 				request.setAttribute("mainPage", "admin/studentSave.jsp");
@@ -301,7 +301,7 @@ public class DrugServlet extends HttpServlet {
 				saveNum = drugDao.drugAdd(con, drug);
 			}
 			if (saveNum > 0) {
-				request.getRequestDispatcher("student?action=list").forward(
+				request.getRequestDispatcher("drug?action=list").forward(
 						request, response);
 			} else {
 				request.setAttribute("student", drug);
@@ -321,7 +321,7 @@ public class DrugServlet extends HttpServlet {
 		}
 	}
 
-	private void studentPreSave(HttpServletRequest request,
+	private void drugPreSave(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String drugId = request.getParameter("studentId");
 		Connection con = null;
@@ -343,7 +343,7 @@ public class DrugServlet extends HttpServlet {
 				e.printStackTrace();
 			}
 		}
-		request.setAttribute("mainPage", "admin/studentSave.jsp");
+		request.setAttribute("mainPage", "admin/drugSave.jsp");
 		request.getRequestDispatcher("mainAdmin.jsp")
 				.forward(request, response);
 	}
