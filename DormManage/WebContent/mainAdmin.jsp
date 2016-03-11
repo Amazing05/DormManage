@@ -1,4 +1,4 @@
-1<%@ page language="java" contentType="text/html; charset=utf-8"
+<%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
 <%@ page import="com.lero.model.Admin" %>
 <%@ page import="com.lero.model.DormManager" %>
@@ -78,7 +78,7 @@
 <div class="container-fluid" style="padding-right: 0px;padding-left: 0px;">
 	<div region="north" style="height: 100px;background-image: url('images/bg.jpg')">
 		<div align="left" style="width: 80%;height:100px ;float: left;padding-top: 40px;padding-left: 30px;" ><font color="white" size="6" >药品管理系统</font></div>
-		<div style="padding-top: 70px;padding-right: 20px;">当前用户：&nbsp;<font color="red" >${currentUser.userName }</font></div>
+<%-- 		<div style="padding-top: 70px;padding-right: 20px;">当前用户：&nbsp;<font color="red" >${currentUser.userName }</font></div> --%>
 	</div>
 </div>
 	<div class="container-fluid">

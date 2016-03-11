@@ -57,10 +57,15 @@ public class DrugServlet extends HttpServlet {
 		if ("preSave".equals(action)) {
 			drugPreSave(request, response);
 			return;
-		} else if ("save".equals(action)) {
+		} else if ("preSave1".equals(action)) {
+			drugPreSave1(request, response);
+			return;
+		}
+		else if ("save".equals(action)) {
 			drugSave(request, response);
 			return;
-		} else if ("delete".equals(action)) {
+		}
+		else if ("delete".equals(action)) {
 			drugDelete(request, response);
 			return;
 		} else if ("list".equals(action)) {
@@ -265,6 +270,7 @@ public class DrugServlet extends HttpServlet {
 		String description = request.getParameter("description");
 		String deadline = request.getParameter("deadline");
 		String drugId = request.getParameter("drugId");
+//		String quantity = request.getParameter("quantity");
 //		String tel = request.getParameter("tel");
 //		Student student = new Student(userName, password,
 //				Integer.parseInt(dormBuildId), dormName, name, sex, tel);
@@ -275,6 +281,7 @@ public class DrugServlet extends HttpServlet {
 		drug.setCounterId(Integer.parseInt(counterId));
 		drug.setName(name);
 		drug.setSellingPrice(Double.parseDouble(sellingPrice));
+		drug.setQuantity(Integer.parseInt(quantity));
 		if (StringUtil.isNotEmpty(drugId)) {
 			drug.setDrugId(Integer.parseInt(drugId));
 		}
@@ -396,5 +403,36 @@ public class DrugServlet extends HttpServlet {
 			}
 		}
 	}
+	
+	
+	private void drugPreSave1(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException {
+		String drugId = request.getParameter("studentId");
+		Connection con = null;
+		try {
+			con = dbUtil.getCon();
+			request.setAttribute("counterList", counterDao.listCounter(con));
+			if (StringUtil.isNotEmpty(drugId)) {
+//				Student student = studentDao.studentShow(con, studentId);
+				Drug drug = drugDao.getDrugById(con, Integer.parseInt(drugId));
+				request.setAttribute("drug", drug);
+//				request.setAttribute("student", student);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				dbUtil.closeCon(con);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		request.setAttribute("mainPage", "admin/drugSave.jsp");
+		request.getRequestDispatcher("mainManager.jsp")
+				.forward(request, response);
+	}
+	
+	
+	
 
 }
